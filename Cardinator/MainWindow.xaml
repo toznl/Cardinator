@@ -5,8 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Cardinator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="550" Width="450" Background="Black">
     <Grid>
+        <Frame Name="frame" Background="White" Height="500" Width="400" />
         
     </Grid>
 </Window>
