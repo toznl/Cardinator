@@ -6,8 +6,7 @@
         xmlns:local="clr-namespace:Cardinator"
         mc:Ignorable="d"
         Title="MainWindow" Height="550" Width="450" Background="Black">
-    <Grid>
+    <Grid x:Name="root">
         <Frame Name="frame" Background="White" Height="500" Width="400" />
-        
     </Grid>
 </Window>
