@@ -43,7 +43,7 @@ namespace Cardinator
                 server = new TcpListener(IPAddress.Parse("127.0.0.1"), 8080);
                 server.Start();
 
-                byte[] buffer = new byte[1024];
+                byte[] buffer = new byte[8092];
 
                 while (true)
                 {
@@ -54,25 +54,25 @@ namespace Cardinator
 
                     NetworkStream stream = client.GetStream();
 
-                    while (stream.Read(buffer, 0, buffer.Length) != 0)
+                    CoOrd packet = new CoOrd();
+                    //buffer = null;
+
+                    while (stream.Read(buffer, 0, Marshal.SizeOf(packet)) != 0)
                     {
-                        // deserializing;
-                        CoOrd packet = new CoOrd();
-                        packet.Deserialize(ref buffer);
 
                         float x = packet.x;
                         float y = packet.y;
                         float z = packet.z;
 
+
+                        Console.WriteLine("이 름 : {0}", x);
+                        Console.WriteLine("과 목 : {0}", y);
+                        Console.WriteLine("점 수 : {0}", z);
+                        Console.WriteLine("");
                         Console.WriteLine("===========================================");
-                        Console.WriteLine("X : {0}", x);
-                        Console.WriteLine("Y : {0}", y);
-                        Console.WriteLine("Z : {0}", z);
-                        Console.WriteLine("===========================================");
+                        Console.WriteLine("");
                     }
 
-                    stream.Close();
-                    client.Close();
                 }
             }
             catch (SocketException se)
@@ -85,6 +85,7 @@ namespace Cardinator
             }
 
             Console.ReadLine();
+
 
         }
 
