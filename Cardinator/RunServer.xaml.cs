@@ -15,8 +15,9 @@ using System.Net.Sockets;
 using System.Net;
 using System.Threading;
 using System.Collections;
+using System.Runtime.InteropServices;
 
-namespace WpfApplication3
+namespace Cardinator
 {
     public partial class RunServer : UserControl
     {
@@ -28,8 +29,16 @@ namespace WpfApplication3
         private Hashtable Waits = new Hashtable();
         private Grid root;
         private List<string> ipList = new List<string>();
+
+        //For using console windows
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
+
+
         public RunServer()
         {
+            AllocConsole();
             InitializeComponent();
             startServer();
         }
@@ -79,6 +88,7 @@ namespace WpfApplication3
                     user.Receive(data2, data2.Length, SocketFlags.None);
                     msg2 = Encoding.Default.GetString(data2);
                     msg2 = msg2.TrimEnd('\0');
+                    Console.WriteLine(msg2);
                     for (int i = 0; i < Users.Count; i++)
                     {
                         ((Socket)Users[ipList[i]]).Send(Encoding.Default.GetBytes(msg2));
