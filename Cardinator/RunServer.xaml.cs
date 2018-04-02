@@ -36,12 +36,13 @@ namespace Cardinator
         static extern bool AllocConsole();
 
 
-        public RunServer()
+        public RunServer(Grid root)
         {
             AllocConsole();
             InitializeComponent();
             startServer();
         }
+
         private void startServer()
         {
             try
