@@ -22,73 +22,97 @@ using System.Net.Sockets;
 using System.Threading;
 using System.IO;
 using System.Diagnostics;
+using System.Runtime.Serialization.Formatters;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization;
+using System.Security.Cryptography;
 
 namespace Cardinator
 {
     public partial class MainWindow : Window
     {
+        //For using console windows
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
 
-     
+        CoOrd coHeadPc1 = new CoOrd();
+        public byte[] Serialize(object param)
+        {
+            byte[] encMsg = null;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                IFormatter br = new BinaryFormatter();
+                br.Serialize(ms, param);
+                encMsg = ms.ToArray();
+            }
+
+            return encMsg;
+        }
+
+        public T Deserialize<T>(byte[] param)
+        {
+            using (MemoryStream ms = new MemoryStream(param))
+            {
+                IFormatter br = new BinaryFormatter();
+                br.Binder = new AllowAssemblyDeserializationBinder();
+                return (T)br.Deserialize(ms);
+            }
+        }
+
+        sealed class AllowAssemblyDeserializationBinder : SerializationBinder
+        {
+            public override Type BindToType(string assemblyName, string TypeName)
+            {
+                Type typeToDeserialize = null;
+                String currentAssembly = System.Reflection.Assembly.GetExecutingAssembly().FullName;
+                assemblyName = currentAssembly;
+
+                typeToDeserialize = Type.GetType(String.Format("{0}, {1}", TypeName, assemblyName));
+
+                return typeToDeserialize;
+
+            }
+        }
+
+
         public MainWindow()
         {
             InitializeComponent();
-            RunServer sv = new RunServer();
-            root.Children.Add(sv);
-            this.Closing += delegate { Environment.Exit(1); };
+            AllocConsole();
 
-            TcpListener server = null;
-
-            try
+            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 11000);
+            Socket sListner = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            Console.WriteLine("Waiting for connection on port {0}", ipEndPoint);
+            sListner.Bind(ipEndPoint);
+            sListner.Listen(1024);
+            while (true)
             {
-                server = new TcpListener(IPAddress.Parse("127.0.0.1"), 8080);
-                server.Start();
 
-                byte[] buffer = new byte[8092];
-
-                while (true)
+                try
                 {
-                    Console.WriteLine("Waiting for a connection.....");
+                    int x = 0;
+                    Socket handler = sListner.Accept();
+                    byte[] buffer = new byte[10000];
+                    Console.WriteLine("connected"); 
+                    x = handler.Receive(buffer);
+                    BinaryFormatter forDeserialize = new BinaryFormatter();
+                    forDeserialize.Binder = new AllowAssemblyDeserializationBinder();
 
-                    TcpClient client = server.AcceptTcpClient();
-                    Console.WriteLine("\nConnected!!");
+                    Deserialize<CoOrd>(buffer);
+                    Console.WriteLine(x);
 
-                    NetworkStream stream = client.GetStream();
-
-                    CoOrd packet = new CoOrd();
-                    //buffer = null;
-
-                    while (stream.Read(buffer, 0, Marshal.SizeOf(packet)) != 0)
-                    {
-
-                        float x = packet.x;
-                        float y = packet.y;
-                        float z = packet.z;
+                    handler.Close();
+                    
 
 
-                        Console.WriteLine("이 름 : {0}", x);
-                        Console.WriteLine("과 목 : {0}", y);
-                        Console.WriteLine("점 수 : {0}", z);
-                        Console.WriteLine("");
-                        Console.WriteLine("===========================================");
-                        Console.WriteLine("");
-                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Exception : {0}", e.ToString());
 
                 }
             }
-            catch (SocketException se)
-            {
-                Console.WriteLine(se.Message.ToString());
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message.ToString());
-            }
-
-            Console.ReadLine();
-
-
         }
-
-       
     }
 }
