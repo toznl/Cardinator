@@ -75,7 +75,11 @@ namespace Coordinator
 
         //SpineBase
         CoOrd spineBasePC1 = new CoOrd();
-        CoOrd spineBasesPC2 = new CoOrd();
+        CoOrd spineBasePC2 = new CoOrd();
+
+        //Ilist Body
+        IList<Body> BodyPC1;
+        IList<Body> BodyPC2;
 
 
 
@@ -142,64 +146,116 @@ namespace Coordinator
 
                     CoOrd buf = new CoOrd();
                     buf = Deserialize<CoOrd>(buffer);
+                    Console.WriteLine(buf.markerPC);
+                    if (buf.markerPC == 1) {
+                        switch (buf.markerType)
+                        {
+                            case JointType.Head:
+                                headPC1 = buf;
+                                break;
+                            case JointType.Neck:
+                                neckPC1 = buf;
+                                break;
+                            case JointType.SpineBase:
+                                spineBasePC1 = buf;
+                                break;
+                            case JointType.SpineMid:
+                                spineMidPC1 = buf;
+                                break;
+                            case JointType.ShoulderLeft:
+                                shoulderLeftPC1 = buf;
+                                break;
+                            case JointType.ElbowLeft:
+                                elbowLeftPC1 = buf;
+                                break;
+                            case JointType.WristLeft:
+                                wristLeftPC1 = buf;
+                                break;
+                            case JointType.ShoulderRight:
+                                shoulderRightPC1 = buf;
+                                break;
+                            case JointType.ElbowRight:
+                                elbowRightPC1 = buf;
+                                break;
+                            case JointType.WristRight:
+                                wristRightPC1 = buf;
+                                break;
+                        }
 
-                    switch (buf.markerType)
-                    {
-                        case JointType.Head :
-                            headPC1 = buf;
-                            break;
-                        case JointType.Neck:
-                            neckPC1 = buf;
-                            break;
-                        case JointType.SpineBase:
-                            spineBasePC1 = buf;
-                            break;
-                        case JointType.SpineMid:
-                            spineMidPC1 = buf;
-                            break;
-                        case JointType.ShoulderLeft:
-                            shoulderLeftPC1 = buf;
-                            break;
-                        case JointType.ElbowLeft:
-                            elbowLeftPC1 = buf;
-                            break;
-                        case JointType.WristLeft:
-                            wristLeftPC1 = buf;
-                            break;
-                        case JointType.ShoulderRight:
-                            shoulderRightPC1 = buf;
-                            break;
-                        case JointType.ElbowRight:
-                            elbowRightPC1 = buf;
-                            break;
-                        case JointType.WristRight:
-                            wristRightPC1 = buf;
-                            break;
+                        Console.WriteLine("===============PC1==============");
+                        if (wristRightPC1.markerTrackingState != null)
+                        {
+
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", headPC1.markerType, headPC1.markerTrackingState, headPC1.x, headPC1.y, headPC1.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", neckPC1.markerType, neckPC1.markerTrackingState, neckPC1.x, neckPC1.y, neckPC1.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", spineMidPC1.markerType, spineMidPC1.markerTrackingState, spineMidPC1.x, spineMidPC1.y, spineMidPC1.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", spineBasePC1.markerType, spineBasePC1.markerTrackingState, spineBasePC1.x, spineBasePC1.y, spineBasePC1.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", shoulderLeftPC1.markerType, shoulderLeftPC1.markerTrackingState, shoulderLeftPC1.x, shoulderLeftPC1.y, shoulderLeftPC1.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", elbowLeftPC1.markerType, elbowLeftPC1.markerTrackingState, elbowLeftPC1.x, elbowLeftPC1.y, elbowLeftPC1.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", wristLeftPC1.markerType, wristLeftPC1.markerTrackingState, wristLeftPC1.x, wristLeftPC1.y, wristLeftPC1.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", shoulderRightPC1.markerType, shoulderRightPC1.markerTrackingState, shoulderRightPC1.x, shoulderRightPC1.y, shoulderRightPC1.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", elbowRightPC1.markerType, elbowRightPC1.markerTrackingState, elbowRightPC1.x, elbowRightPC1.y, elbowRightPC1.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", wristRightPC1.markerType, wristRightPC1.markerTrackingState, wristRightPC1.x, wristRightPC1.y, wristRightPC1.z);
+
+                        }
+                        handler.Close();
+                        Console.WriteLine("File Received");
                     }
-                    Console.WriteLine("===============PC1==============");
-                    if (wristRightPC1.markerTrackingState != null)
+                    else if (buf.markerPC == 2)
                     {
+                        switch (buf.markerType)
+                        {
+                            case JointType.Head:
+                                headPC2 = buf;
+                                break;
+                            case JointType.Neck:
+                                neckPC2 = buf;
+                                break;
+                            case JointType.SpineBase:
+                                spineBasePC2 = buf;
+                                break;
+                            case JointType.SpineMid:
+                                spineMidPC2 = buf;
+                                break;
+                            case JointType.ShoulderLeft:
+                                shoulderLeftPC2 = buf;
+                                break;
+                            case JointType.ElbowLeft:
+                                elbowLeftPC2 = buf;
+                                break;
+                            case JointType.WristLeft:
+                                wristLeftPC2 = buf;
+                                break;
+                            case JointType.ShoulderRight:
+                                shoulderRightPC2 = buf;
+                                break;
+                            case JointType.ElbowRight:
+                                elbowRightPC2 = buf;
+                                break;
+                            case JointType.WristRight:
+                                wristRightPC2 = buf;
+                                break;
+                        }
 
-                        Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", headPC1.markerType, headPC1.markerTrackingState, headPC1.x, headPC1.y, headPC1.z);
-                        Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", neckPC1.markerType, neckPC1.markerTrackingState, neckPC1.x, neckPC1.y, neckPC1.z);
-                        Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", spineMidPC1.markerType, spineMidPC1.markerTrackingState, spineMidPC1.x, spineMidPC1.y, spineMidPC1.z);
-                        Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", spineBasePC1.markerType, spineBasePC1.markerTrackingState, spineBasePC1.x, spineBasePC1.y, spineBasePC1.z);
-                        Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", shoulderLeftPC1.markerType, shoulderLeftPC1.markerTrackingState, shoulderLeftPC1.x, shoulderLeftPC1.y, shoulderLeftPC1.z);
-                        Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", elbowLeftPC1.markerType, elbowLeftPC1.markerTrackingState, elbowLeftPC1.x, elbowLeftPC1.y, elbowLeftPC1.z);
-                        Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", wristLeftPC1.markerType, wristLeftPC1.markerTrackingState, wristLeftPC1.x, wristLeftPC1.y, wristLeftPC1.z);
-                        Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", shoulderRightPC1.markerType, shoulderRightPC1.markerTrackingState, shoulderRightPC1.x, shoulderRightPC1.y, shoulderRightPC1.z);
-                        Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", elbowRightPC1.markerType, elbowRightPC1.markerTrackingState, elbowRightPC1.x, elbowRightPC1.y, elbowRightPC1.z);
-                        Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", wristRightPC1.markerType, wristRightPC1.markerTrackingState, wristRightPC1.x, wristRightPC1.y, wristRightPC1.z);
+                        Console.WriteLine("===============PC2==============");
+                        if (wristRightPC2.markerTrackingState != null)
+                        {
 
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", headPC2.markerType, headPC2.markerTrackingState, headPC2.x, headPC2.y, headPC2.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", neckPC2.markerType, neckPC2.markerTrackingState, neckPC2.x, neckPC2.y, neckPC2.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", spineMidPC2.markerType, spineMidPC2.markerTrackingState, spineMidPC2.x, spineMidPC2.y, spineMidPC2.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", spineBasePC2.markerType, spineBasePC2.markerTrackingState, spineBasePC2.x, spineBasePC2.y, spineBasePC2.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", shoulderLeftPC2.markerType, shoulderLeftPC2.markerTrackingState, shoulderLeftPC2.x, shoulderLeftPC2.y, shoulderLeftPC2.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", elbowLeftPC2.markerType, elbowLeftPC2.markerTrackingState, elbowLeftPC2.x, elbowLeftPC2.y, elbowLeftPC2.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", wristLeftPC2.markerType, wristLeftPC2.markerTrackingState, wristLeftPC2.x, wristLeftPC2.y, wristLeftPC2.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", shoulderRightPC2.markerType, shoulderRightPC2.markerTrackingState, shoulderRightPC2.x, shoulderRightPC2.y, shoulderRightPC2.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", elbowRightPC2.markerType, elbowRightPC2.markerTrackingState, elbowRightPC2.x, elbowRightPC2.y, elbowRightPC2.z);
+                            Console.WriteLine("JonitType : {0}, JointState : {1}, x : {2}, y : {3}, z : {4}", wristRightPC2.markerType, wristRightPC2.markerTrackingState, wristRightPC2.x, wristRightPC2.y, wristRightPC2.z);
 
+                        }
+                        handler.Close();
+                        Console.WriteLine("File Received");
                     }
-
-
-                    handler.Close();
-                    Console.WriteLine("File Received");
-
-
-
                 }
                 catch (Exception e)
                 {
