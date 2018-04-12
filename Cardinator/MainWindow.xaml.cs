@@ -40,48 +40,72 @@ namespace Coordinator
         //Head
         CoOrd headPC1 = new CoOrd();
         CoOrd headPC2 = new CoOrd();
+        CoOrd headCar = new CoOrd();
 
         //Neck
         CoOrd neckPC1 = new CoOrd();
         CoOrd neckPC2 = new CoOrd();
+        CoOrd neckCar = new CoOrd();
 
         //ShoulderLeft
         CoOrd shoulderLeftPC1 = new CoOrd();
         CoOrd shoulderLeftPC2 = new CoOrd();
+        CoOrd shoulderLeftCar = new CoOrd();
 
         //ElbowLeft
         CoOrd elbowLeftPC1 = new CoOrd();
         CoOrd elbowLeftPC2= new CoOrd();
+        CoOrd elbowLeftCar = new CoOrd();
 
         //WristLeft
         CoOrd wristLeftPC1 = new CoOrd();
         CoOrd wristLeftPC2 = new CoOrd();
+        CoOrd wristLeftCar = new CoOrd();
 
         //ShoulderRight
         CoOrd shoulderRightPC1 = new CoOrd();
         CoOrd shoulderRightPC2= new CoOrd();
+        CoOrd shoulderRightCar = new CoOrd();
 
         //ElbowRight
         CoOrd elbowRightPC1 = new CoOrd();
         CoOrd elbowRightPC2 = new CoOrd();
+        CoOrd elbowRightCar = new CoOrd();
 
         //WristRight
         CoOrd wristRightPC1 = new CoOrd();
         CoOrd wristRightPC2 = new CoOrd();
+        CoOrd wristRightCar = new CoOrd();
 
         //SpineMid
         CoOrd spineMidPC1 = new CoOrd();
         CoOrd spineMidPC2 = new CoOrd();
+        CoOrd spineMidCar = new CoOrd();
 
         //SpineBase
         CoOrd spineBasePC1 = new CoOrd();
         CoOrd spineBasePC2 = new CoOrd();
+        CoOrd spineBaseCar = new CoOrd();
 
+        struct body {
+            public CoOrd head;
+            public CoOrd neck;
+            public CoOrd spineMid;
+            public CoOrd spnieBase;
+            public CoOrd shoulderRight;
+            public CoOrd elbowRight;
+            public CoOrd wristRight;
+            public CoOrd shoulderLeft;
+            public CoOrd elbowLeft;
+            public CoOrd wirstLeft;
+        }
+
+        body BodySet = new body();
+
+        
         //Ilist Body
-        IList<Body> BodyPC1;
-        IList<Body> BodyPC2;
-
-
+        //IList<Body> BodyPC1;
+        //IList<Body> BodyPC2;
 
         public byte[] Serialize(object param)
         {
@@ -104,6 +128,20 @@ namespace Coordinator
                 br.Binder = new AllowAssemblyDeserializationBinder();
                 return (T)br.Deserialize(ms);
             }
+        }
+
+        public float euculidianDistance(CoOrd dotPC1, CoOrd dotPC2)
+        {
+            float result;
+            result = (dotPC1.x - dotPC2.x) ^ 2 + (dotPC1.y - dotPC2.y) ^ 2 + (dotPC1.z - dotPC2.z) ^ 2;
+
+
+            return result;
+        }
+
+        public void Cardination (body bodySetPC1, body bodySetPC2)
+        {
+            
         }
 
         sealed class AllowAssemblyDeserializationBinder : SerializationBinder
