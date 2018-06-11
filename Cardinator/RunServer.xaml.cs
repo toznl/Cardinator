@@ -23,7 +23,7 @@ using System.Runtime.Serialization;
 using System.IO;
 using System.Security.Cryptography;
 
-    
+
 
 namespace Coordinator
 {
@@ -50,16 +50,14 @@ namespace Coordinator
         [MarshalAs(UnmanagedType.IUnknown)]
         public object markerTrackingState;
 
-
-
         public CoOrd(float x1, float y1, float z1, Microsoft.Kinect.JointType m1, object m2, int mPc)
         {
             x = x1;
             y = y1;
-            z = z1;
+            z = z1 * 100;
             markerType = m1;
             markerTrackingState = m2;
-            markerPC=mPc;
+            markerPC = mPc;
 
         }
     }
@@ -78,6 +76,6 @@ namespace Coordinator
             InitializeComponent();
         }
 
-       
+
     }
 }
