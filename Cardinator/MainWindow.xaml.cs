@@ -233,17 +233,166 @@ namespace Coordinator
 
         }
 
-        public float errorFunc(float x, float y, float z, float x1, float y1, float z1)
+        public float errorFunc0(float x, float y, float z, float x1, float y1, float z1, ErrorVar errorVar)
         {
-            ErrorVar errorVar = new ErrorVar();
+            float result;
 
-            float errorfunc = 2 * (Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) + Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) *
-              (Convert.ToSingle(errorVar.transZ) - z1 + x * (Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) + Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) - y * (Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) - Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + z * Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)))
-              - 2 * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) - Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) *
-              (Convert.ToSingle(errorVar.transY) - y1 - x * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) - Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) + y * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) + Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + z * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) +
-              2 * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * (Convert.ToSingle(errorVar.transX) - x1 - z * Convert.ToSingle(Math.Sin(errorVar.thetaY)) + x * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) + y * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)));
+            result = 2 * (x * (Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) + Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) - y * (Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) - Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + z * Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) * (Convert.ToSingle(errorVar.transY) - y1 - x * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) - Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) + y * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) + Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + z * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) - 2 * (y * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) + Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) - x * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) - Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) + z * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) * (Convert.ToSingle(errorVar.transZ) - z1 + x * (Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) + Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) - y * (Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) - Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + z * Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)));
 
-            return errorfunc;
+            return result;
+        }
+
+        public float errorFunc1(float x, float y, float z, float x1, float y1, float z1, ErrorVar errorVar)
+        {
+            float result;
+            result= 2 * (z * Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaY)) + x * Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) + y * Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) * (Convert.ToSingle(errorVar.transZ) - z1 + x * (Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) + Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) - y * (Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) - Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + z * Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) - 2 * (z * Convert.ToSingle(Math.Cos(errorVar.thetaY)) + x * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) + y * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) * (Convert.ToSingle(errorVar.transX) - x1 - z * Convert.ToSingle(Math.Sin(errorVar.thetaY)) + x * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) + y * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + 2 * (z * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) + x * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) + y * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) * (Convert.ToSingle(errorVar.transY) - y1 - x * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) - Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) + y * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) + Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + z * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)));
+            return result;
+        }
+        public float errorFunc2(float x, float y, float z, float x1, float y1, float z1, ErrorVar errorVar)
+        {
+            float result;
+            result = 2 * (y * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) - x * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) * (Convert.ToSingle(errorVar.transX) - x1 - z * Convert.ToSingle(Math.Sin(errorVar.thetaY)) + x * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) + y * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + 2 * (x * (Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) - Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + y * (Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) + Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)))) * (Convert.ToSingle(errorVar.transZ) - z1 + x * (Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) + Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) - y * (Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) - Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + z * Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) - 2 * (x * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) + Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + y * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) - Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)))) * (Convert.ToSingle(errorVar.transY) - y1 - x * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) - Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) + y * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) + Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + z * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)));
+            return result;
+        }
+        public float errorFunc3(float x, float y, float z, float x1, float y1, float z1, ErrorVar errorVar)
+        {
+            float result;
+            result = 2 * Convert.ToSingle(errorVar.transX) - 2 * x1 - 2 * z * Convert.ToSingle(Math.Sin(errorVar.thetaY)) + 2 * x * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) + 2 * y * Convert.ToSingle(Math.Cos(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ));
+            return result;
+        }
+        public float errorFunc4(float x, float y, float z, float x1, float y1, float z1, ErrorVar errorVar)
+        {
+            float result;
+            result = 2 * Convert.ToSingle(errorVar.transY) - 2 * y1 - 2 * x * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) - Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) + 2 * y * (Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) + Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + 2 * z * Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY));
+            return result;
+        }
+        public float errorFunc5(float x, float y, float z, float x1, float y1, float z1, ErrorVar errorVar)
+        {
+            float result;
+            result = 2 * Convert.ToSingle(errorVar.transZ) - 2 * z1 + 2 * x * (Convert.ToSingle(Math.Sin(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ)) + Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaY))) - 2 * y * (Convert.ToSingle(Math.Cos(errorVar.thetaZ)) * Convert.ToSingle(Math.Sin(errorVar.thetaX)) - Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY)) * Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + 2 * z * Convert.ToSingle(Math.Cos(errorVar.thetaX)) * Convert.ToSingle(Math.Sin(errorVar.thetaY));
+            return result;
+        }
+
+        public ErrorVar gradientDecsent(float x, float y, float z, float x1, float y1, float z1, ErrorVar errorVar)
+        {
+
+            float etaX = 0.01f;
+            float etaY = 0.01f;
+            float etaZ = 0.01f;
+            float etaXt = 0.01f;
+            float etaYt = 0.01f;
+            float etaZt = 0.01f;
+
+            ErrorVar resultVar;
+
+            for (int i = 0; i < 500; i++)
+            {
+              
+
+                float temp0 = errorFunc0(x, y, z, x1, y1, z1, errorVar);
+                float temp1 = errorFunc1(x, y, z, x1, y1, z1, errorVar);
+                float temp2 = errorFunc2(x, y, z, x1, y1, z1, errorVar);
+                float temp3 = errorFunc3(x, y, z, x1, y1, z1, errorVar);
+                float temp4 = errorFunc4(x, y, z, x1, y1, z1, errorVar);
+                float temp5 = errorFunc5(x, y, z, x1, y1, z1, errorVar);
+
+                errorVar.thetaX = errorVar.thetaX + etaX;
+                errorVar.thetaY = errorVar.thetaY + etaY;
+                errorVar.thetaZ = errorVar.thetaZ + etaZ;
+                errorVar.transX = errorVar.transX + etaXt;
+                errorVar.transY = errorVar.transY + etaYt;
+                errorVar.transZ = errorVar.transZ + etaZt;
+
+                if (errorFunc0(x, y, z, x1, y1, z1, errorVar) > temp0)
+                {
+                    etaX += 0.01f;
+                }
+                else if (errorFunc0(x, y, z, x1, y1, z1, errorVar) < temp0)
+                {
+                    etaX -= 0.01f;
+                }
+                else if (temp0 == 0)
+                {
+                    etaX = 0;
+                }
+
+                if (errorFunc1(x, y, z, x1, y1, z1, errorVar) < temp1)
+                {
+                    etaY += 0.01f;
+                }
+                else if (errorFunc0(x, y, z, x1, y1, z1, errorVar) > temp1)
+                {
+                    etaY -= 0.01f;
+                }
+                else if (temp1 == 0)
+                {
+                    etaY = 0;
+                }
+
+
+                if (errorFunc0(x, y, z, x1, y1, z1, errorVar) < temp2)
+                {
+                    etaZ += 0.01f;
+                }
+                else if (errorFunc0(x, y, z, x1, y1, z1, errorVar) > temp2)
+                {
+                    etaZ -= 0.01f;
+                }
+                if (temp2 == 0)
+                {
+                    etaZ = 0;
+                }
+
+                if (errorFunc0(x, y, z, x1, y1, z1, errorVar) < temp3)
+                {
+                    etaXt += 0.01f;
+                }
+                else if (errorFunc0(x, y, z, x1, y1, z1, errorVar) > temp3)                {
+                    etaXt -= 0.01f;
+                }
+                else if (temp3 == 0)
+                {
+                    etaXt = 0;
+                }
+
+                if (errorFunc1(x, y, z, x1, y1, z1, errorVar) < temp4)
+                {
+                    etaYt += 0.01f;
+                }
+                else if (errorFunc0(x, y, z, x1, y1, z1, errorVar) > temp4)
+                {
+                    etaYt -= 0.01f;
+                }
+                else if (temp4 == 0)
+                {
+                    etaYt = 0;
+                }
+
+
+                if (errorFunc0(x, y, z, x1, y1, z1, errorVar) < temp5)
+                {
+                    etaZt += 0.01f;
+                }
+                else if (errorFunc0(x, y, z, x1, y1, z1, errorVar) > temp5)
+                {
+                    etaZt -= 0.01f;
+                }
+                if (temp5 == 0)
+                {
+                    etaZt = 0;
+                }
+
+                if (temp0 < 0.1 && temp1 < 1 && temp2 < 1 && temp3 < 1 && temp4 < 1 && temp5 < 1) break;
+
+
+
+                resultVar = errorVar;
+                //Console.WriteLine("thX : {0}, thY : {1}, thZ : {2}, tlX : {3}, tlY : {4}, tlZ : {5}", errorVar.thetaX, errorVar.thetaY, errorVar.thetaZ, errorVar.transX, errorVar.transY, errorVar.transZ);
+                //Console.WriteLine("thX : {0}, thY : {1}, thZ : {2}, tlX : {3}, tlY : {4}, tlZ : {5}", temp0, temp1, temp2, temp3, temp4, temp5);
+            }
+            resultVar = errorVar;
+
+            return resultVar;
 
         }
 
@@ -253,12 +402,23 @@ namespace Coordinator
             InitializeComponent();
             AllocConsole();
 
+            RunServer cl = new RunServer(root);
+            root.Children.Add(cl);
+
             //Variables for Socket
             IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 11000);
             Socket sListner = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             Console.WriteLine("Waiting for connection on port {0}", ipEndPoint);
             sListner.Bind(ipEndPoint);
             sListner.Listen(1024);
+
+            ErrorVar calVar;
+            calVar.thetaX = 1;
+            calVar.thetaY = 1;
+            calVar.thetaZ = 1;
+            calVar.transX = 1;
+            calVar.transY = 1;
+            calVar.transZ = 1;
 
             while (true)
             {
@@ -544,15 +704,222 @@ namespace Coordinator
 
                     handler.Close();
 
-                    float distancePre = errorFunc(preProPC1.x, preProPC1.y, preProPC1.z, preProPC2.x, preProPC2.y, preProPC2.z);
+                    calVar = gradientDecsent(preProPC1.x, preProPC1.y, preProPC1.z, preProPC2.x, preProPC2.y, preProPC2.z, calVar);
 
                     Console.WriteLine("Shortest Joint is {0}", shortestDisName);
                     Console.WriteLine("Shortest length of X,Y,Z = {0}", shortestDIs);
                     //Console.WriteLine("Preprocessing of shortest Joint x={0}, y={1}, z={2}", preProPC1.x, preProPC1.y, preProPC1.z);
                     //Console.WriteLine("wristPC1 Z = {0}, wristPC2 Z = {1}", wristLeftPC1.z, wristLeftPC2.z);
 
-                    Console.WriteLine("Distance={0}", distancePre);
+                    headCar.x =;
 
+
+
+                    //Drawing Skeleton
+
+                    canvas.Children.Clear();
+                    Ellipse drawHead = new Ellipse
+                    {
+                        Fill = Brushes.Red,
+                        Width = 20,
+                        Height = 20
+                    };
+
+                    Canvas.SetLeft(drawHead, headPC1.x - drawHead.Width / 2);
+                    Canvas.SetTop(drawHead, headPC1.y - drawHead.Height / 2);
+                    canvas.Children.Add(drawHead);
+
+                    Ellipse drawLeftShoulder = new Ellipse
+                    {
+                        Fill = Brushes.Yellow,
+                        Width = 20,
+                        Height = 20
+                    };
+
+                    Canvas.SetLeft(drawLeftShoulder, shoulderLeftPC1.x - drawLeftShoulder.Width / 2);
+                    Canvas.SetTop(drawLeftShoulder, shoulderLeftPC1.y - drawLeftShoulder.Height / 2);
+                    canvas.Children.Add(drawLeftShoulder);
+
+                    Ellipse drawNeck = new Ellipse
+                    {
+                        Fill = Brushes.Orange,
+                        Width = 20,
+                        Height = 20
+                    };
+
+                    Canvas.SetLeft(drawNeck, neckPC1.x - drawNeck.Width / 2);
+                    Canvas.SetTop(drawNeck, neckPC1.y - drawNeck.Height / 2);
+                    canvas.Children.Add(drawNeck);
+
+                    Ellipse drawElbowLeft = new Ellipse
+                    {
+                        Fill = Brushes.Yellow,
+                        Width = 20,
+                        Height = 20
+                    };
+
+                    Canvas.SetLeft(drawElbowLeft, elbowLeftPC1.x - drawElbowLeft.Width / 2);
+                    Canvas.SetTop(drawElbowLeft, elbowLeftPC1.y - drawElbowLeft.Height / 2);
+                    canvas.Children.Add(drawElbowLeft);
+
+                    Ellipse drawWristLeft = new Ellipse
+                    {
+                        Fill = Brushes.Yellow,
+                        Width = 20,
+                        Height = 20
+                    };
+
+                    Canvas.SetLeft(drawWristLeft, wristLeftPC1.x - drawWristLeft.Width / 2);
+                    Canvas.SetTop(drawWristLeft, wristLeftPC1.y - drawWristLeft.Height / 2);
+                    canvas.Children.Add(drawWristLeft);
+
+                    Ellipse drawRightShoulder = new Ellipse
+                    {
+                        Fill = Brushes.Green,
+                        Width = 20,
+                        Height = 20
+                    };
+
+                    Canvas.SetLeft(drawRightShoulder, shoulderRightPC1.x - drawRightShoulder.Width / 2);
+                    Canvas.SetTop(drawRightShoulder, shoulderRightPC1.y - drawRightShoulder.Height / 2);
+                    canvas.Children.Add(drawRightShoulder);
+
+                    Ellipse drawElbowRight = new Ellipse
+                    {
+                        Fill = Brushes.Green,
+                        Width = 20,
+                        Height = 20
+                    };
+
+                    Canvas.SetLeft(drawElbowRight, elbowRightPC1.x - drawElbowRight.Width / 2);
+                    Canvas.SetTop(drawElbowRight, elbowRightPC1.y - drawElbowRight.Height / 2);
+                    canvas.Children.Add(drawElbowRight);
+
+                    Ellipse drawWristRight = new Ellipse
+                    {
+                        Fill = Brushes.Green,
+                        Width = 20,
+                        Height = 20
+                    };
+
+                    Canvas.SetLeft(drawWristRight, wristRightPC1.x - drawWristRight.Width / 2);
+                    Canvas.SetTop(drawWristRight, wristRightPC1.y - drawWristRight.Height / 2);
+                    canvas.Children.Add(drawWristRight);
+
+                    Ellipse drawSpineBase = new Ellipse
+                    {
+                        Fill = Brushes.Orange,
+                        Width = 20,
+                        Height = 20
+                    };
+
+                    Canvas.SetLeft(drawSpineBase, spineBasePC1.x - drawSpineBase.Width / 2);
+                    Canvas.SetTop(drawSpineBase, spineBasePC1.y - drawSpineBase.Height / 2);
+                    canvas.Children.Add(drawSpineBase);
+
+                    Ellipse drawSpineMid = new Ellipse
+                    {
+                        Fill = Brushes.Orange,
+                        Width = 20,
+                        Height = 20
+                    };
+
+                    Canvas.SetLeft(drawSpineMid, spineMidPC1.x - drawSpineMid.Width / 2);
+                    Canvas.SetTop(drawSpineMid, spineMidPC1.y - drawSpineMid.Height / 2);
+                    canvas.Children.Add(drawSpineMid);
+
+                    //Drawing Skeleton
+                    //Head to Neck
+                    Line lineHeadToNeck = new Line();
+                    lineHeadToNeck.Stroke = Brushes.LightSteelBlue;
+                    lineHeadToNeck.X1 = headPC1.x;
+                    lineHeadToNeck.Y1 = headPC1.y;
+                    lineHeadToNeck.X2 = neckPC1.x;
+                    lineHeadToNeck.Y2 = neckPC1.y;
+                    lineHeadToNeck.StrokeThickness = 2;
+
+                    //Neck to LeftShoulder
+                    Line lineNeckToLeftShoulder = new Line();
+                    lineNeckToLeftShoulder.Stroke = Brushes.LightSteelBlue;
+                    lineNeckToLeftShoulder.X1 = shoulderLeftPC1.x;
+                    lineNeckToLeftShoulder.Y1 = shoulderLeftPC1.y;
+                    lineNeckToLeftShoulder.X2 = neckPC1.x;
+                    lineNeckToLeftShoulder.Y2 = neckPC1.y;
+                    lineNeckToLeftShoulder.StrokeThickness = 2;
+
+                    //LeftShoulder to LeftElbow
+                    Line lineLeftShoulderToElbowLeft = new Line();
+                    lineLeftShoulderToElbowLeft.Stroke = Brushes.LightSteelBlue;
+                    lineLeftShoulderToElbowLeft.X1 = shoulderLeftPC1.x;
+                    lineLeftShoulderToElbowLeft.Y1 = shoulderLeftPC1.y;
+                    lineLeftShoulderToElbowLeft.X2 = elbowLeftPC1.x;
+                    lineLeftShoulderToElbowLeft.Y2 = elbowLeftPC1.y;
+                    lineLeftShoulderToElbowLeft.StrokeThickness = 2;
+
+                    //LeftElbow to LeftWrist
+                    Line lineElbowLeftToWristLeft = new Line();
+                    lineElbowLeftToWristLeft.Stroke = Brushes.LightSteelBlue;
+                    lineElbowLeftToWristLeft.X1 = elbowLeftPC1.x;
+                    lineElbowLeftToWristLeft.Y1 = elbowLeftPC1.y;
+                    lineElbowLeftToWristLeft.X2 = wristLeftPC1.x;
+                    lineElbowLeftToWristLeft.Y2 = wristLeftPC1.y;
+                    lineElbowLeftToWristLeft.StrokeThickness = 2;
+
+                    //Neck to RightShoulder
+                    Line lineNeckToRightShoulder = new Line();
+                    lineNeckToRightShoulder.Stroke = Brushes.LightSteelBlue;
+                    lineNeckToRightShoulder.X1 = shoulderRightPC1.x;
+                    lineNeckToRightShoulder.Y1 = shoulderRightPC1.y;
+                    lineNeckToRightShoulder.X2 = neckPC1.x;
+                    lineNeckToRightShoulder.Y2 = neckPC1.y;
+                    lineNeckToRightShoulder.StrokeThickness = 2;
+
+                    //RightShoulder to RightElbow
+                    Line lineRightShoulderToElbowRight = new Line();
+                    lineRightShoulderToElbowRight.Stroke = Brushes.LightSteelBlue;
+                    lineRightShoulderToElbowRight.X1 = shoulderRightPC1.x;
+                    lineRightShoulderToElbowRight.Y1 = shoulderRightPC1.y;
+                    lineRightShoulderToElbowRight.X2 = elbowRightPC1.x;
+                    lineRightShoulderToElbowRight.Y2 = elbowRightPC1.y;
+                    lineRightShoulderToElbowRight.StrokeThickness = 2;
+
+                    //RightElbow to RightWrist
+                    Line lineElbowRightToWristRight = new Line();
+                    lineElbowRightToWristRight.Stroke = Brushes.LightSteelBlue;
+                    lineElbowRightToWristRight.X1 = elbowRightPC1.x;
+                    lineElbowRightToWristRight.Y1 = elbowRightPC1.y;
+                    lineElbowRightToWristRight.X2 = wristRightPC1.x;
+                    lineElbowRightToWristRight.Y2 = wristRightPC1.y;
+                    lineElbowRightToWristRight.StrokeThickness = 2;
+
+                    //Neck to SpineMid
+                    Line lineNeckToSpineMid = new Line();
+                    lineNeckToSpineMid.Stroke = Brushes.LightSteelBlue;
+                    lineNeckToSpineMid.X1 = neckPC1.x;
+                    lineNeckToSpineMid.Y1 = neckPC1.y;
+                    lineNeckToSpineMid.X2 = spineMidPC1.x;
+                    lineNeckToSpineMid.Y2 = spineMidPC1.y;
+                    lineNeckToSpineMid.StrokeThickness = 2;
+
+                    //SpineMid to SpineBase
+                    Line lineSpineMidToSpineBase = new Line();
+                    lineSpineMidToSpineBase.Stroke = Brushes.LightSteelBlue;
+                    lineSpineMidToSpineBase.X1 = spineMidPC1.x;
+                    lineSpineMidToSpineBase.Y1 = spineMidPC1.y;
+                    lineSpineMidToSpineBase.X2 = spineBasePC1.x;
+                    lineSpineMidToSpineBase.Y2 = spineBasePC1.y;
+                    lineSpineMidToSpineBase.StrokeThickness = 2;
+
+
+                    canvas.Children.Add(lineHeadToNeck);
+                    canvas.Children.Add(lineNeckToLeftShoulder);
+                    canvas.Children.Add(lineNeckToRightShoulder);
+                    canvas.Children.Add(lineLeftShoulderToElbowLeft);
+                    canvas.Children.Add(lineRightShoulderToElbowRight);
+                    canvas.Children.Add(lineElbowRightToWristRight);
+                    canvas.Children.Add(lineElbowLeftToWristLeft);
+                    canvas.Children.Add(lineNeckToSpineMid);
+                    canvas.Children.Add(lineSpineMidToSpineBase);
 
                 }
 
@@ -565,5 +932,7 @@ namespace Coordinator
                 }
             }
         }
+
+
     }
 }

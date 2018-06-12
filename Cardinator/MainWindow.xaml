@@ -8,5 +8,6 @@
         Title="MainWindow" Height="550" Width="450" Background="Black">
     <Grid x:Name="root">
         <Frame Name="frame" Background="White" Height="500" Width="400" />
+        <Canvas Name="canvas" Width="400" Height="500"/>
     </Grid>
 </Window>

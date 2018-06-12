@@ -71,9 +71,10 @@ namespace Coordinator
         //[return: MarshalAs(UnmanagedType.Bool)]
         //static extern bool AllocConsole();
 
-        public RunServer()
+        public RunServer(Grid root)
         {
             InitializeComponent();
+            this.root = root;
         }
 
 
