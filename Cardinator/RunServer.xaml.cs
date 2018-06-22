@@ -33,7 +33,7 @@ namespace Coordinator
     {
 
         [MarshalAs(UnmanagedType.R4)]
-        public float x;
+        public float x; 
 
         [MarshalAs(UnmanagedType.R4)]
         public float y;
@@ -54,29 +54,24 @@ namespace Coordinator
         {
             x = x1;
             y = y1;
-            z = z1 * 100;
+            z = z1;
             markerType = m1;
             markerTrackingState = m2;
             markerPC = mPc;
 
         }
+
+
     }
 
     public partial class RunServer : UserControl
     {
         private Grid root;
 
-        ////For using console windows
-        //[DllImport("kernel32.dll", SetLastError = true)]
-        //[return: MarshalAs(UnmanagedType.Bool)]
-        //static extern bool AllocConsole();
-
         public RunServer(Grid root)
         {
-            InitializeComponent();
             this.root = root;
         }
-
 
     }
 }
