@@ -27,6 +27,32 @@ using System.Security.Cryptography;
 
 namespace Coordinator
 {
+
+    //Theta and Translation Valiables for Error function and initialized
+    public struct ErrorVar
+    {
+        public double thetaX;
+        public double thetaY;
+        public double thetaZ;
+
+        public double transX;
+        public double transY;
+        public double transZ;
+
+
+
+        public ErrorVar(double x1, double y1, double z1, double x2, double y2, double z2)
+        {
+            thetaX = x1;
+            thetaY = y1;
+            thetaZ = z1;
+
+            transX = x2;
+            transY = y2;
+            transZ = z2;
+
+        }
+    }
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     [Serializable]
     public struct CoOrd
@@ -63,6 +89,10 @@ namespace Coordinator
 
 
     }
+   
+
+    
+
 
     public partial class RunServer : UserControl
     {

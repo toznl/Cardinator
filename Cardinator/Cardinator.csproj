@@ -14,6 +14,9 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -28,7 +31,6 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x64</PlatformTarget>
@@ -95,10 +97,50 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Emgu.CV">
+      <HintPath>..\..\..\..\..\..\Emgu\emgucv-windows-universal 2.4.10.1940\bin\Emgu.CV.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.DebuggerVisualizers.VS2008">
+      <HintPath>..\..\..\..\..\..\Emgu\emgucv-windows-universal 2.4.10.1940\bin\Emgu.CV.DebuggerVisualizers.VS2008.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.DebuggerVisualizers.VS2010">
+      <HintPath>..\..\..\..\..\..\Emgu\emgucv-windows-universal 2.4.10.1940\bin\Emgu.CV.DebuggerVisualizers.VS2010.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.DebuggerVisualizers.VS2012">
+      <HintPath>..\..\..\..\..\..\Emgu\emgucv-windows-universal 2.4.10.1940\bin\Emgu.CV.DebuggerVisualizers.VS2012.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.DebuggerVisualizers.VS2013">
+      <HintPath>..\..\..\..\..\..\Emgu\emgucv-windows-universal 2.4.10.1940\bin\Emgu.CV.DebuggerVisualizers.VS2013.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.GPU">
+      <HintPath>..\..\..\..\..\..\Emgu\emgucv-windows-universal 2.4.10.1940\bin\Emgu.CV.GPU.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.ML">
+      <HintPath>..\..\..\..\..\..\Emgu\emgucv-windows-universal 2.4.10.1940\bin\Emgu.CV.ML.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.OCR">
+      <HintPath>..\..\..\..\..\..\Emgu\emgucv-windows-universal 2.4.10.1940\bin\Emgu.CV.OCR.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.OpenCL">
+      <HintPath>..\..\..\..\..\..\Emgu\emgucv-windows-universal 2.4.10.1940\bin\Emgu.CV.OpenCL.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.Stitching">
+      <HintPath>..\..\..\..\..\..\Emgu\emgucv-windows-universal 2.4.10.1940\bin\Emgu.CV.Stitching.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.UI">
+      <HintPath>..\..\..\..\..\..\Emgu\emgucv-windows-universal 2.4.10.1940\bin\Emgu.CV.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.CV.VideoStab">
+      <HintPath>..\..\..\..\..\..\Emgu\emgucv-windows-universal 2.4.10.1940\bin\Emgu.CV.VideoStab.dll</HintPath>
+    </Reference>
+    <Reference Include="Emgu.Util">
+      <HintPath>..\..\..\..\..\..\Emgu\emgucv-windows-universal 2.4.10.1940\bin\Emgu.Util.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Kinect, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -112,12 +154,20 @@
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="ZedGraph">
+      <HintPath>..\..\..\..\..\..\Emgu\emgucv-windows-universal 2.4.10.1940\bin\ZedGraph.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Calibration\Calibration.cs" />
+    <Compile Include="Kalman\Kalman4Joint.cs" />
+    <Compile Include="Kalman\SyntheticData.cs" />
+    <Compile Include="Kalman\Random.cs" />
+    <Compile Include="Old_Version\OldErrorFunc.cs" />
     <Compile Include="RunServer.xaml.cs">
       <DependentUpon>RunServer.xaml</DependentUpon>
     </Compile>
@@ -132,6 +182,7 @@
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Page Include="RunServer.xaml">
       <SubType>Designer</SubType>
@@ -175,6 +226,25 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="opencv_calib3d2410.dll" />
+    <Content Include="opencv_contrib2410.dll" />
+    <Content Include="opencv_core2410.dll" />
+    <Content Include="opencv_features2d2410.dll" />
+    <Content Include="opencv_flann2410.dll" />
+    <Content Include="opencv_gpu2410.dll" />
+    <Content Include="opencv_highgui2410.dll" />
+    <Content Include="opencv_imgproc2410.dll" />
+    <Content Include="opencv_legacy2410.dll" />
+    <Content Include="opencv_ml2410.dll" />
+    <Content Include="opencv_nonfree2410.dll" />
+    <Content Include="opencv_objdetect2410.dll" />
+    <Content Include="opencv_photo2410.dll" />
+    <Content Include="opencv_stitching2410.dll" />
+    <Content Include="opencv_superres2410.dll" />
+    <Content Include="opencv_video2410.dll" />
+    <Content Include="opencv_videostab2410.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
