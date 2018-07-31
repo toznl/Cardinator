@@ -27,7 +27,6 @@ using System.Security.Cryptography;
 
 namespace Coordinator
 {
-
     //Theta and Translation Valiables for Error function and initialized
     public struct ErrorVar
     {

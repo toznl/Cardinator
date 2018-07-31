@@ -38,7 +38,9 @@ namespace Coordinator
 {
     public partial class MainWindow : Window
     {
-
+        /*
+        Region for all Functions and Variables
+        */
         #region KalmanVariables
 
         private SyntheticData headSynPC1 = new SyntheticData();
@@ -121,15 +123,90 @@ namespace Coordinator
         private Kalman kalmanwristRightPC2;
         private Emgu.CV.Matrix<float> wristRightPC2Mat = new Matrix<float>(6, 1);
 
+        private float dt;
+
+        private float formalXheadPC1;
+        private float formalYheadPC1;
+        private float formalZheadPC1;
+
+        private float formalXneckPC1;
+        private float formalYneckPC1;
+        private float formalZneckPC1;
+
+        private float formalXspineBasePC1;
+        private float formalYspineBasePC1;
+        private float formalZspineBasePC1;
+
+        private float formalXspineMidPC1;
+        private float formalYspineMidPC1;
+        private float formalZspineMidPC1;
+
+        private float formalXshoulderLeftPC1;
+        private float formalYshoulderLeftPC1;
+        private float formalZshoulderLeftPC1;
+
+        private float formalXelbowLeftPC1;
+        private float formalYelbowLeftPC1;
+        private float formalZelbowLeftPC1;
+
+        private float formalXwristLeftPC1;
+        private float formalYwristLeftPC1;
+        private float formalZwristLeftPC1;
+
+        private float formalXshoulderRightPC1;
+        private float formalYshoulderRightPC1;
+        private float formalZshoulderRightPC1;
+
+        private float formalXelbowRightPC1;
+        private float formalYelbowRightPC1;
+        private float formalZelbowRightPC1;
+
+        private float formalXwristRightPC1;
+        private float formalYwristRightPC1;
+        private float formalZwristRightPC1;
+
+        private float formalXheadPC2;
+        private float formalYheadPC2;
+        private float formalZheadPC2;
+
+        private float formalXneckPC2;
+        private float formalYneckPC2;
+        private float formalZneckPC2;
+
+        private float formalXspineBasePC2;
+        private float formalYspineBasePC2;
+        private float formalZspineBasePC2;
+
+        private float formalXspineMidPC2;
+        private float formalYspineMidPC2;
+        private float formalZspineMidPC2;
+
+        private float formalXshoulderLeftPC2;
+        private float formalYshoulderLeftPC2;
+        private float formalZshoulderLeftPC2;
+
+        private float formalXelbowLeftPC2;
+        private float formalYelbowLeftPC2;
+        private float formalZelbowLeftPC2;
+
+        private float formalXwristLeftPC2;
+        private float formalYwristLeftPC2;
+        private float formalZwristLeftPC2;
+
+        private float formalXshoulderRightPC2;
+        private float formalYshoulderRightPC2;
+        private float formalZshoulderRightPC2;
+
+        private float formalXelbowRightPC2;
+        private float formalYelbowRightPC2;
+        private float formalZelbowRightPC2;
+
+        private float formalXwristRightPC2;
+        private float formalYwristRightPC2;
+        private float formalZwristRightPC2;
+
         #endregion
-
-        public static ErrorVar calVar;
-
-        //For using console windows
-        [DllImport("kernel32.dll", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool AllocConsole();
-
+        #region CoordVariables
         //CoOrd Structs to save and calibration 
         //Head
         CoOrd headPC1 = new CoOrd();
@@ -167,6 +244,7 @@ namespace Coordinator
         CoOrd elbowRightCar = new CoOrd();
 
         //WristRight
+
         CoOrd wristRightPC1 = new CoOrd();
         CoOrd wristRightPC2 = new CoOrd();
         CoOrd wristRightCar = new CoOrd();
@@ -181,7 +259,16 @@ namespace Coordinator
         CoOrd spineBasePC2 = new CoOrd();
         CoOrd spineBaseCar = new CoOrd();
 
+        public static ErrorVar calVar;
 
+        #endregion
+        #region ConsoleWindows
+        //For using console windows
+        [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        static extern bool AllocConsole();
+        #endregion
+        #region Serialize
         public byte[] Serialize(object param)
         {
             byte[] encMsg = null;
@@ -220,6 +307,9 @@ namespace Coordinator
 
             }
         }
+
+        #endregion
+        #region FunctionsForCalibration
 
         //Square product
         public float square(float a)
@@ -263,7 +353,7 @@ namespace Coordinator
             result = ((square(((Convert.ToSingle(errorVar.transZ)) - z1 + x * ((Convert.ToSingle(Math.Sin((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ))) - (Convert.ToSingle(Math.Cos((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY)))) + y * ((Convert.ToSingle(Math.Cos(errorVar.thetaZ))) * (Convert.ToSingle(Math.Sin((errorVar.thetaX + eta)))) + (Convert.ToSingle(Math.Cos((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ)))) + z * (Convert.ToSingle(Math.Cos((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Cos(errorVar.thetaY))))) + square(((Convert.ToSingle(errorVar.transY)) - y1 + x * ((Convert.ToSingle(Math.Cos((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) * (Convert.ToSingle(Math.Sin((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY)))) + y * ((Convert.ToSingle(Math.Cos((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) - (Convert.ToSingle(Math.Sin((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ)))) - z * (Convert.ToSingle(Math.Cos(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin((errorVar.thetaX + eta)))))) + square(((Convert.ToSingle(errorVar.transX)) - x1 + z * (Convert.ToSingle(Math.Sin(errorVar.thetaY))) + x * (Convert.ToSingle(Math.Cos(errorVar.thetaY))) * (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) - y * (Convert.ToSingle(Math.Cos(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ))))))
             - (square(((Convert.ToSingle(errorVar.transZ)) - z1 + x * ((Convert.ToSingle(Math.Sin(errorVar.thetaX))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ))) - (Convert.ToSingle(Math.Cos(errorVar.thetaX))) * (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY)))) + y * ((Convert.ToSingle(Math.Cos(errorVar.thetaZ))) * (Convert.ToSingle(Math.Sin(errorVar.thetaX))) + (Convert.ToSingle(Math.Cos(errorVar.thetaX))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ)))) + z * (Convert.ToSingle(Math.Cos(errorVar.thetaX))) * (Convert.ToSingle(Math.Cos(errorVar.thetaY))))) + square(((Convert.ToSingle(errorVar.transY)) - y1 + x * ((Convert.ToSingle(Math.Cos(errorVar.thetaX))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) * (Convert.ToSingle(Math.Sin(errorVar.thetaX))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY)))) + y * ((Convert.ToSingle(Math.Cos(errorVar.thetaX))) * (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) - (Convert.ToSingle(Math.Sin(errorVar.thetaX))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ)))) - z * (Convert.ToSingle(Math.Cos(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin(errorVar.thetaX))))) + square(((Convert.ToSingle(errorVar.transX)) - x1 + z * (Convert.ToSingle(Math.Sin(errorVar.thetaY))) + x * (Convert.ToSingle(Math.Cos(errorVar.thetaY))) * (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) - y * (Convert.ToSingle(Math.Cos(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ))))))) / Convert.ToSingle(eta);
 
-
+            
 
             return result;
         }
@@ -286,6 +376,9 @@ namespace Coordinator
 
             return result;
         }
+
+
+        
         public float errorFunc3(float x, float y, float z, float x1, float y1, float z1, ErrorVar errorVar, double eta)
         {
             float result;
@@ -353,6 +446,10 @@ namespace Coordinator
             return resultVar;
 
         }
+        #endregion
+        /*
+        Region for all Functions and Variables
+        */
 
         //MainWindow
         public MainWindow()
@@ -365,13 +462,9 @@ namespace Coordinator
             new Thread(new ThreadStart(Calibration)).Start();
         }
 
-
-       
-
         //Calibration
         public void Calibration()
         {
-
             //Initialize 6 variables for Calibration
             calVar.thetaX = -0.3;
             calVar.thetaY = -0.3;
@@ -400,6 +493,7 @@ namespace Coordinator
 
                 try
                 {
+                    #region Get Joints
                     //Get PC1 Joints
                     if (buf.markerPC == 1)
                     {
@@ -475,8 +569,10 @@ namespace Coordinator
                                 wristRightPC2 = buf;
                                 break;
                         }
+                        #endregion
                     }
 
+                    #region Kalman
                     //Kalman headPC1
                     headPC1Mat[0, 0] = headPC1.x;
                     headPC1Mat[1, 0] = headPC1.y;
@@ -680,8 +776,7 @@ namespace Coordinator
                     spineBasePC2Mat[0, 0] = spineBasePC2.x;
                     spineBasePC2Mat[1, 0] = spineBasePC2.y;
                     spineBasePC2Mat[2, 0] = spineBasePC2.z;
-
-
+                    
                     kalmanspineBasePC2 = new Kalman(6, 3, 0);
 
                     Emgu.CV.Matrix<float> spineBasePC2state = spineBasePC2Mat;
@@ -1046,7 +1141,8 @@ namespace Coordinator
                     wristRightPC2.x = estimatedwristRightPC2Point.x;
                     wristRightPC2.y = estimatedwristRightPC2Point.y;
                     wristRightPC2.z = estimatedwristRightPC2Point.z;
-
+                    #endregion
+                    #region Calibration
                     //Gradient Decsent
                     calVar = gradientDecsent(
                                     spineMidPC1.x, spineMidPC1.y, spineMidPC1.z, spineMidPC2.x, spineMidPC2.y, spineMidPC2.z,
@@ -1068,8 +1164,8 @@ namespace Coordinator
                     elbowRightCar = preProcess(elbowRightPC1.x, elbowRightPC1.y, elbowRightPC1.z, calVar);
 
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate { canvas.Children.Clear(); }));
-
-
+                    #endregion
+                    #region DrawSkeleton <Calibration>
                     //DrawSkeleton of Calibration
 
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate { canvas.Children.Clear(); }));
@@ -1115,7 +1211,7 @@ namespace Coordinator
                             Width = 20,
                             Height = 20
                         };
-
+                            
                         Canvas.SetLeft(drawLeftShoulder, shoulderLeftCar.x - drawLeftShoulder.Width / 2);
                         Canvas.SetTop(drawLeftShoulder, shoulderLeftCar.y - drawLeftShoulder.Height / 2);
                         canvas.Children.Add(drawLeftShoulder);
@@ -1325,8 +1421,260 @@ namespace Coordinator
                         Console.WriteLine(e.ToString());
                     }
                     //DrawSkeleton of Calibration ----------------> END <----------------
+                    #endregion
 
-                    //DrawSkeleton of PC2 ----------------> START <----------------
+                    #region DrawSkeleton <PC1>
+                    ////DrawSkeleton of PC1---------------- > START < ----------------
+
+                    //DrawSkeleton
+                    //Head
+                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                    //{
+
+                    //    System.Windows.Shapes.Ellipse drawHead = new System.Windows.Shapes.Ellipse
+                    //    {
+                    //        Fill = Brushes.Red,
+                    //        Width = 20,
+                    //        Height = 20
+                    //    };
+
+                    //    Canvas.SetLeft(drawHead, headPC1.x - drawHead.Width / 2);
+                    //    Canvas.SetTop(drawHead, headPC1.y - drawHead.Height / 2);
+                    //    canvas.Children.Add(drawHead);
+
+                    //}));
+
+                    //Neck
+                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                    //{
+                    //    Ellipse drawNeck = new Ellipse
+                    //    {
+                    //        Fill = Brushes.Orange,
+                    //        Width = 20,
+                    //        Height = 20
+                    //    };
+
+                    //    Canvas.SetLeft(drawNeck, neckPC1.x - drawNeck.Width / 2);
+                    //    Canvas.SetTop(drawNeck, neckPC1.y - drawNeck.Height / 2);
+                    //    canvas.Children.Add(drawNeck);
+                    //}));
+
+                    //Left Shoulder
+                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                    //{
+                    //    Ellipse drawLeftShoulder = new Ellipse
+                    //    {
+                    //        Fill = Brushes.Yellow,
+                    //        Width = 20,
+                    //        Height = 20
+                    //    };
+
+                    //    Canvas.SetLeft(drawLeftShoulder, shoulderLeftPC1.x - drawLeftShoulder.Width / 2);
+                    //    Canvas.SetTop(drawLeftShoulder, shoulderLeftPC1.y - drawLeftShoulder.Height / 2);
+                    //    canvas.Children.Add(drawLeftShoulder);
+                    //}));
+
+                    //Left Elbow
+                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                    //{
+                    //    Ellipse drawElbowLeft = new Ellipse
+                    //    {
+                    //        Fill = Brushes.Yellow,
+                    //        Width = 20,
+                    //        Height = 20
+                    //    };
+
+                    //    Canvas.SetLeft(drawElbowLeft, elbowLeftPC1.x - drawElbowLeft.Width / 2);
+                    //    Canvas.SetTop(drawElbowLeft, elbowLeftPC1.y - drawElbowLeft.Height / 2);
+                    //    canvas.Children.Add(drawElbowLeft);
+                    //}));
+
+                    //Left Wrist
+                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                    //{
+                    //    Ellipse drawWristLeft = new Ellipse
+                    //    {
+                    //        Fill = Brushes.Yellow,
+                    //        Width = 20,
+                    //        Height = 20
+                    //    };
+
+                    //    Canvas.SetLeft(drawWristLeft, wristLeftPC1.x - drawWristLeft.Width / 2);
+                    //    Canvas.SetTop(drawWristLeft, wristLeftPC1.y - drawWristLeft.Height / 2);
+                    //    canvas.Children.Add(drawWristLeft);
+                    //}));
+
+                    //Right Shoulder
+                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                    //{
+                    //    Ellipse drawRightShoulder = new Ellipse
+                    //    {
+                    //        Fill = Brushes.Green,
+                    //        Width = 20,
+                    //        Height = 20
+                    //    };
+
+                    //    Canvas.SetLeft(drawRightShoulder, shoulderRightPC1.x - drawRightShoulder.Width / 2);
+                    //    Canvas.SetTop(drawRightShoulder, shoulderRightPC1.y - drawRightShoulder.Height / 2);
+                    //    canvas.Children.Add(drawRightShoulder);
+                    //}));
+
+                    //Right Elbow
+                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                    //{
+                    //    Ellipse drawElbowRight = new Ellipse
+                    //    {
+                    //        Fill = Brushes.Green,
+                    //        Width = 20,
+                    //        Height = 20
+                    //    };
+
+                    //    Canvas.SetLeft(drawElbowRight, elbowRightPC1.x - drawElbowRight.Width / 2);
+                    //    Canvas.SetTop(drawElbowRight, elbowRightPC1.y - drawElbowRight.Height / 2);
+                    //    canvas.Children.Add(drawElbowRight);
+                    //}));
+
+                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                    //{
+                    //    Ellipse drawWristRight = new Ellipse
+                    //    {
+                    //        Fill = Brushes.Green,
+                    //        Width = 20,
+                    //        Height = 20
+                    //    };
+
+                    //    Canvas.SetLeft(drawWristRight, wristRightPC1.x - drawWristRight.Width / 2);
+                    //    Canvas.SetTop(drawWristRight, wristRightPC1.y - drawWristRight.Height / 2);
+                    //    canvas.Children.Add(drawWristRight);
+                    //}));
+
+                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                    //{
+                    //    Ellipse drawSpineBase = new Ellipse
+                    //    {
+                    //        Fill = Brushes.Orange,
+                    //        Width = 20,
+                    //        Height = 20
+                    //    };
+
+                    //    Canvas.SetLeft(drawSpineBase, spineBasePC1.x - drawSpineBase.Width / 2);
+                    //    Canvas.SetTop(drawSpineBase, spineBasePC1.y - drawSpineBase.Height / 2);
+                    //    canvas.Children.Add(drawSpineBase);
+                    //}));
+
+                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                    //{
+                    //    Ellipse drawSpineMid = new Ellipse
+                    //    {
+                    //        Fill = Brushes.Orange,
+                    //        Width = 20,
+                    //        Height = 20
+                    //    };
+
+                    //    Canvas.SetLeft(drawSpineMid, spineMidPC1.x - drawSpineMid.Width / 2);
+                    //    Canvas.SetTop(drawSpineMid, spineMidPC1.y - drawSpineMid.Height / 2);
+                    //    canvas.Children.Add(drawSpineMid);
+                    //}));
+
+                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
+                    //{
+                    //    Head to Neck
+                    //    Line lineHeadToNeck = new Line();
+                    //    lineHeadToNeck.Stroke = Brushes.LightSteelBlue;
+                    //    lineHeadToNeck.X1 = headPC1.x;
+                    //    lineHeadToNeck.Y1 = headPC1.y;
+                    //    lineHeadToNeck.X2 = neckPC1.x;
+                    //    lineHeadToNeck.Y2 = neckPC1.y;
+                    //    lineHeadToNeck.StrokeThickness = 2;
+
+                    //    Neck to LeftShoulder
+                    //    Line lineNeckToLeftShoulder = new Line();
+                    //    lineNeckToLeftShoulder.Stroke = Brushes.LightSteelBlue;
+                    //    lineNeckToLeftShoulder.X1 = shoulderLeftPC1.x;
+                    //    lineNeckToLeftShoulder.Y1 = shoulderLeftPC1.y;
+                    //    lineNeckToLeftShoulder.X2 = neckPC1.x;
+                    //    lineNeckToLeftShoulder.Y2 = neckPC1.y;
+                    //    lineNeckToLeftShoulder.StrokeThickness = 2;
+
+                    //    LeftShoulder to LeftElbow
+                    //    Line lineLeftShoulderToElbowLeft = new Line();
+                    //    lineLeftShoulderToElbowLeft.Stroke = Brushes.LightSteelBlue;
+                    //    lineLeftShoulderToElbowLeft.X1 = shoulderLeftPC1.x;
+                    //    lineLeftShoulderToElbowLeft.Y1 = shoulderLeftPC1.y;
+                    //    lineLeftShoulderToElbowLeft.X2 = elbowLeftPC1.x;
+                    //    lineLeftShoulderToElbowLeft.Y2 = elbowLeftPC1.y;
+                    //    lineLeftShoulderToElbowLeft.StrokeThickness = 2;
+
+                    //    LeftElbow to LeftWrist
+                    //    Line lineElbowLeftToWristLeft = new Line();
+                    //    lineElbowLeftToWristLeft.Stroke = Brushes.LightSteelBlue;
+                    //    lineElbowLeftToWristLeft.X1 = elbowLeftPC1.x;
+                    //    lineElbowLeftToWristLeft.Y1 = elbowLeftPC1.y;
+                    //    lineElbowLeftToWristLeft.X2 = wristLeftPC1.x;
+                    //    lineElbowLeftToWristLeft.Y2 = wristLeftPC1.y;
+                    //    lineElbowLeftToWristLeft.StrokeThickness = 2;
+
+                    //    Neck to RightShoulder
+                    //    Line lineNeckToRightShoulder = new Line();
+                    //    lineNeckToRightShoulder.Stroke = Brushes.LightSteelBlue;
+                    //    lineNeckToRightShoulder.X1 = shoulderRightPC1.x;
+                    //    lineNeckToRightShoulder.Y1 = shoulderRightPC1.y;
+                    //    lineNeckToRightShoulder.X2 = neckPC1.x;
+                    //    lineNeckToRightShoulder.Y2 = neckPC1.y;
+                    //    lineNeckToRightShoulder.StrokeThickness = 2;
+
+                    //    RightShoulder to RightElbow
+                    //    Line lineRightShoulderToElbowRight = new Line();
+                    //    lineRightShoulderToElbowRight.Stroke = Brushes.LightSteelBlue;
+                    //    lineRightShoulderToElbowRight.X1 = shoulderRightPC1.x;
+                    //    lineRightShoulderToElbowRight.Y1 = shoulderRightPC1.y;
+                    //    lineRightShoulderToElbowRight.X2 = elbowRightPC1.x;
+                    //    lineRightShoulderToElbowRight.Y2 = elbowRightPC1.y;
+                    //    lineRightShoulderToElbowRight.StrokeThickness = 2;
+
+                    //    RightElbow to RightWrist
+                    //    Line lineElbowRightToWristRight = new Line();
+                    //    lineElbowRightToWristRight.Stroke = Brushes.LightSteelBlue;
+                    //    lineElbowRightToWristRight.X1 = elbowRightPC1.x;
+                    //    lineElbowRightToWristRight.Y1 = elbowRightPC1.y;
+                    //    lineElbowRightToWristRight.X2 = wristRightPC1.x;
+                    //    lineElbowRightToWristRight.Y2 = wristRightPC1.y;
+                    //    lineElbowRightToWristRight.StrokeThickness = 2;
+
+                    //    Neck to SpineMid
+                    //    Line lineNeckToSpineMid = new Line();
+                    //    lineNeckToSpineMid.Stroke = Brushes.LightSteelBlue;
+                    //    lineNeckToSpineMid.X1 = neckPC1.x;
+                    //    lineNeckToSpineMid.Y1 = neckPC1.y;
+                    //    lineNeckToSpineMid.X2 = spineMidPC1.x;
+                    //    lineNeckToSpineMid.Y2 = spineMidPC1.y;
+                    //    lineNeckToSpineMid.StrokeThickness = 2;
+
+                    //    SpineMid to SpineBase
+                    //    Line lineSpineMidToSpineBase = new Line();
+                    //    lineSpineMidToSpineBase.Stroke = Brushes.LightSteelBlue;
+                    //    lineSpineMidToSpineBase.X1 = spineMidPC1.x;
+                    //    lineSpineMidToSpineBase.Y1 = spineMidPC1.y;
+                    //    lineSpineMidToSpineBase.X2 = spineBasePC1.x;
+                    //    lineSpineMidToSpineBase.Y2 = spineBasePC1.y;
+                    //    lineSpineMidToSpineBase.StrokeThickness = 2;
+
+
+                    //    canvas.Children.Add(lineHeadToNeck);
+                    //    canvas.Children.Add(lineNeckToLeftShoulder);
+                    //    canvas.Children.Add(lineNeckToRightShoulder);
+                    //    canvas.Children.Add(lineLeftShoulderToElbowLeft);
+                    //    canvas.Children.Add(lineRightShoulderToElbowRight);
+                    //    canvas.Children.Add(lineElbowRightToWristRight);
+                    //    canvas.Children.Add(lineElbowLeftToWristLeft);
+                    //    canvas.Children.Add(lineNeckToSpineMid);
+                    //    canvas.Children.Add(lineSpineMidToSpineBase);
+                    //}));
+
+                    //DrawSkeleton of PC1 ----------------> END <----------------
+                    #endregion
+                    #region DrawSkeleton <PC2>
+                    ////DrawSkeleton of PC2---------------- > START < ----------------
 
                     //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate { canvas.Children.Clear(); }));
                     ////DrawSkeleton
@@ -1574,257 +1922,9 @@ namespace Coordinator
                     //    canvas.Children.Add(lineSpineMidToSpineBase);
                     //}));
 
-                    //DrawSkeleton of PC2 ----------------> END <----------------
-
-                    //DrawSkeleton of PC1 ----------------> START <----------------
-
-                    ////DrawSkeleton
-                    ////Head
-                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-                    //{
-
-                    //    Ellipse drawHead = new Ellipse
-                    //    {
-                    //        Fill = Brushes.Red,
-                    //        Width = 20,
-                    //        Height = 20
-                    //    };
-
-                    //    Canvas.SetLeft(drawHead, headPC1.x - drawHead.Width / 2);
-                    //    Canvas.SetTop(drawHead, headPC1.y - drawHead.Height / 2);
-                    //    canvas.Children.Add(drawHead);
-
-                    //}));
-
-                    ////Neck
-                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-                    //{
-                    //    Ellipse drawNeck = new Ellipse
-                    //    {
-                    //        Fill = Brushes.Orange,
-                    //        Width = 20,
-                    //        Height = 20
-                    //    };
-
-                    //    Canvas.SetLeft(drawNeck, neckPC1.x - drawNeck.Width / 2);
-                    //    Canvas.SetTop(drawNeck, neckPC1.y - drawNeck.Height / 2);
-                    //    canvas.Children.Add(drawNeck);
-                    //}));
-
-                    ////Left Shoulder
-                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-                    //{
-                    //    Ellipse drawLeftShoulder = new Ellipse
-                    //    {
-                    //        Fill = Brushes.Yellow,
-                    //        Width = 20,
-                    //        Height = 20
-                    //    };
-
-                    //    Canvas.SetLeft(drawLeftShoulder, shoulderLeftPC1.x - drawLeftShoulder.Width / 2);
-                    //    Canvas.SetTop(drawLeftShoulder, shoulderLeftPC1.y - drawLeftShoulder.Height / 2);
-                    //    canvas.Children.Add(drawLeftShoulder);
-                    //}));
-
-                    ////Left Elbow
-                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-                    //{
-                    //    Ellipse drawElbowLeft = new Ellipse
-                    //    {
-                    //        Fill = Brushes.Yellow,
-                    //        Width = 20,
-                    //        Height = 20
-                    //    };
-
-                    //    Canvas.SetLeft(drawElbowLeft, elbowLeftPC1.x - drawElbowLeft.Width / 2);
-                    //    Canvas.SetTop(drawElbowLeft, elbowLeftPC1.y - drawElbowLeft.Height / 2);
-                    //    canvas.Children.Add(drawElbowLeft);
-                    //}));
-
-                    ////Left Wrist
-                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-                    //{
-                    //    Ellipse drawWristLeft = new Ellipse
-                    //    {
-                    //        Fill = Brushes.Yellow,
-                    //        Width = 20,
-                    //        Height = 20
-                    //    };
-
-                    //    Canvas.SetLeft(drawWristLeft, wristLeftPC1.x - drawWristLeft.Width / 2);
-                    //    Canvas.SetTop(drawWristLeft, wristLeftPC1.y - drawWristLeft.Height / 2);
-                    //    canvas.Children.Add(drawWristLeft);
-                    //}));
-
-                    ////Right Shoulder
-                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-                    //{
-                    //    Ellipse drawRightShoulder = new Ellipse
-                    //    {
-                    //        Fill = Brushes.Green,
-                    //        Width = 20,
-                    //        Height = 20
-                    //    };
-
-                    //    Canvas.SetLeft(drawRightShoulder, shoulderRightPC1.x - drawRightShoulder.Width / 2);
-                    //    Canvas.SetTop(drawRightShoulder, shoulderRightPC1.y - drawRightShoulder.Height / 2);
-                    //    canvas.Children.Add(drawRightShoulder);
-                    //}));
-
-                    ////Right Elbow
-                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-                    //{
-                    //    Ellipse drawElbowRight = new Ellipse
-                    //    {
-                    //        Fill = Brushes.Green,
-                    //        Width = 20,
-                    //        Height = 20
-                    //    };
-
-                    //    Canvas.SetLeft(drawElbowRight, elbowRightPC1.x - drawElbowRight.Width / 2);
-                    //    Canvas.SetTop(drawElbowRight, elbowRightPC1.y - drawElbowRight.Height / 2);
-                    //    canvas.Children.Add(drawElbowRight);
-                    //}));
-
-                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-                    //{
-                    //    Ellipse drawWristRight = new Ellipse
-                    //    {
-                    //        Fill = Brushes.Green,
-                    //        Width = 20,
-                    //        Height = 20
-                    //    };
-
-                    //    Canvas.SetLeft(drawWristRight, wristRightPC1.x - drawWristRight.Width / 2);
-                    //    Canvas.SetTop(drawWristRight, wristRightPC1.y - drawWristRight.Height / 2);
-                    //    canvas.Children.Add(drawWristRight);
-                    //}));
-
-                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-                    //{
-                    //    Ellipse drawSpineBase = new Ellipse
-                    //    {
-                    //        Fill = Brushes.Orange,
-                    //        Width = 20,
-                    //        Height = 20
-                    //    };
-
-                    //    Canvas.SetLeft(drawSpineBase, spineBasePC1.x - drawSpineBase.Width / 2);
-                    //    Canvas.SetTop(drawSpineBase, spineBasePC1.y - drawSpineBase.Height / 2);
-                    //    canvas.Children.Add(drawSpineBase);
-                    //}));
-
-                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-                    //{
-                    //    Ellipse drawSpineMid = new Ellipse
-                    //    {
-                    //        Fill = Brushes.Orange,
-                    //        Width = 20,
-                    //        Height = 20
-                    //    };
-
-                    //    Canvas.SetLeft(drawSpineMid, spineMidPC1.x - drawSpineMid.Width / 2);
-                    //    Canvas.SetTop(drawSpineMid, spineMidPC1.y - drawSpineMid.Height / 2);
-                    //    canvas.Children.Add(drawSpineMid);
-                    //}));
-
-                    //Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
-                    //{
-                    //    //Head to Neck
-                    //    Line lineHeadToNeck = new Line();
-                    //    lineHeadToNeck.Stroke = Brushes.LightSteelBlue;
-                    //    lineHeadToNeck.X1 = headPC1.x;
-                    //    lineHeadToNeck.Y1 = headPC1.y;
-                    //    lineHeadToNeck.X2 = neckPC1.x;
-                    //    lineHeadToNeck.Y2 = neckPC1.y;
-                    //    lineHeadToNeck.StrokeThickness = 2;
-
-                    //    //Neck to LeftShoulder
-                    //    Line lineNeckToLeftShoulder = new Line();
-                    //    lineNeckToLeftShoulder.Stroke = Brushes.LightSteelBlue;
-                    //    lineNeckToLeftShoulder.X1 = shoulderLeftPC1.x;
-                    //    lineNeckToLeftShoulder.Y1 = shoulderLeftPC1.y;
-                    //    lineNeckToLeftShoulder.X2 = neckPC1.x;
-                    //    lineNeckToLeftShoulder.Y2 = neckPC1.y;
-                    //    lineNeckToLeftShoulder.StrokeThickness = 2;
-
-                    //    //LeftShoulder to LeftElbow
-                    //    Line lineLeftShoulderToElbowLeft = new Line();
-                    //    lineLeftShoulderToElbowLeft.Stroke = Brushes.LightSteelBlue;
-                    //    lineLeftShoulderToElbowLeft.X1 = shoulderLeftPC1.x;
-                    //    lineLeftShoulderToElbowLeft.Y1 = shoulderLeftPC1.y;
-                    //    lineLeftShoulderToElbowLeft.X2 = elbowLeftPC1.x;
-                    //    lineLeftShoulderToElbowLeft.Y2 = elbowLeftPC1.y;
-                    //    lineLeftShoulderToElbowLeft.StrokeThickness = 2;
-
-                    //    //LeftElbow to LeftWrist
-                    //    Line lineElbowLeftToWristLeft = new Line();
-                    //    lineElbowLeftToWristLeft.Stroke = Brushes.LightSteelBlue;
-                    //    lineElbowLeftToWristLeft.X1 = elbowLeftPC1.x;
-                    //    lineElbowLeftToWristLeft.Y1 = elbowLeftPC1.y;
-                    //    lineElbowLeftToWristLeft.X2 = wristLeftPC1.x;
-                    //    lineElbowLeftToWristLeft.Y2 = wristLeftPC1.y;
-                    //    lineElbowLeftToWristLeft.StrokeThickness = 2;
-
-                    //    //Neck to RightShoulder
-                    //    Line lineNeckToRightShoulder = new Line();
-                    //    lineNeckToRightShoulder.Stroke = Brushes.LightSteelBlue;
-                    //    lineNeckToRightShoulder.X1 = shoulderRightPC1.x;
-                    //    lineNeckToRightShoulder.Y1 = shoulderRightPC1.y;
-                    //    lineNeckToRightShoulder.X2 = neckPC1.x;
-                    //    lineNeckToRightShoulder.Y2 = neckPC1.y;
-                    //    lineNeckToRightShoulder.StrokeThickness = 2;
-
-                    //    //RightShoulder to RightElbow
-                    //    Line lineRightShoulderToElbowRight = new Line();
-                    //    lineRightShoulderToElbowRight.Stroke = Brushes.LightSteelBlue;
-                    //    lineRightShoulderToElbowRight.X1 = shoulderRightPC1.x;
-                    //    lineRightShoulderToElbowRight.Y1 = shoulderRightPC1.y;
-                    //    lineRightShoulderToElbowRight.X2 = elbowRightPC1.x;
-                    //    lineRightShoulderToElbowRight.Y2 = elbowRightPC1.y;
-                    //    lineRightShoulderToElbowRight.StrokeThickness = 2;
-
-                    //    //RightElbow to RightWrist
-                    //    Line lineElbowRightToWristRight = new Line();
-                    //    lineElbowRightToWristRight.Stroke = Brushes.LightSteelBlue;
-                    //    lineElbowRightToWristRight.X1 = elbowRightPC1.x;
-                    //    lineElbowRightToWristRight.Y1 = elbowRightPC1.y;
-                    //    lineElbowRightToWristRight.X2 = wristRightPC1.x;
-                    //    lineElbowRightToWristRight.Y2 = wristRightPC1.y;
-                    //    lineElbowRightToWristRight.StrokeThickness = 2;
-
-                    //    //Neck to SpineMid
-                    //    Line lineNeckToSpineMid = new Line();
-                    //    lineNeckToSpineMid.Stroke = Brushes.LightSteelBlue;
-                    //    lineNeckToSpineMid.X1 = neckPC1.x;
-                    //    lineNeckToSpineMid.Y1 = neckPC1.y;
-                    //    lineNeckToSpineMid.X2 = spineMidPC1.x;
-                    //    lineNeckToSpineMid.Y2 = spineMidPC1.y;
-                    //    lineNeckToSpineMid.StrokeThickness = 2;
-
-                    //    //SpineMid to SpineBase
-                    //    Line lineSpineMidToSpineBase = new Line();
-                    //    lineSpineMidToSpineBase.Stroke = Brushes.LightSteelBlue;
-                    //    lineSpineMidToSpineBase.X1 = spineMidPC1.x;
-                    //    lineSpineMidToSpineBase.Y1 = spineMidPC1.y;
-                    //    lineSpineMidToSpineBase.X2 = spineBasePC1.x;
-                    //    lineSpineMidToSpineBase.Y2 = spineBasePC1.y;
-                    //    lineSpineMidToSpineBase.StrokeThickness = 2;
-
-
-                    //    canvas.Children.Add(lineHeadToNeck);
-                    //    canvas.Children.Add(lineNeckToLeftShoulder);
-                    //    canvas.Children.Add(lineNeckToRightShoulder);
-                    //    canvas.Children.Add(lineLeftShoulderToElbowLeft);
-                    //    canvas.Children.Add(lineRightShoulderToElbowRight);
-                    //    canvas.Children.Add(lineElbowRightToWristRight);
-                    //    canvas.Children.Add(lineElbowLeftToWristLeft);
-                    //    canvas.Children.Add(lineNeckToSpineMid);
-                    //    canvas.Children.Add(lineSpineMidToSpineBase);
-                    //}));
-
-                    //DrawSkeleton of PC1 ----------------> END <----------------
-
+                    ////DrawSkeleton of PC2---------------- > END < ----------------
+                    #endregion
+                    
                 }
 
                 catch (Exception e)

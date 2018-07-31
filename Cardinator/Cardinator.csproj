@@ -163,7 +163,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Calibration\Calibration.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Kalman\Kalman4Joint.cs" />
     <Compile Include="Kalman\SyntheticData.cs" />
     <Compile Include="Kalman\Random.cs" />
