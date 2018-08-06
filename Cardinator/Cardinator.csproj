@@ -246,5 +246,8 @@
     <Content Include="opencv_video2410.dll" />
     <Content Include="opencv_videostab2410.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Angular_Transform\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

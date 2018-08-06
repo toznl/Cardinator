@@ -123,7 +123,27 @@ namespace Coordinator
         private Kalman kalmanwristRightPC2;
         private Emgu.CV.Matrix<float> wristRightPC2Mat = new Matrix<float>(6, 1);
 
-        private float dt;
+        private float dtheadPC1;
+        private float dtneckPC1;
+        private float dtspineBasePC1;
+        private float dtspineMidPC1;
+        private float dtshoulderLeftPC1;
+        private float dtelbowLeftPC1;
+        private float dtwristLeftPC1;
+        private float dtshoulderRightPC1;
+        private float dtelbowRightPC1;
+        private float dtwristRightPC1;
+
+        private float dtheadPC2;
+        private float dtneckPC2;
+        private float dtspineBasePC2;
+        private float dtspineMidPC2;
+        private float dtshoulderLeftPC2;
+        private float dtelbowLeftPC2;
+        private float dtwristLeftPC2;
+        private float dtshoulderRightPC2;
+        private float dtelbowRightPC2;
+        private float dtwristRightPC2;
 
         private float formalXheadPC1;
         private float formalYheadPC1;
@@ -321,7 +341,7 @@ namespace Coordinator
         }
 
         //Calibration of PC1, PC2
-        public CoOrd preProcess(float x, float y, float z, ErrorVar errorVar)
+        public CoOrd preProcess( float x, float y, float z, ErrorVar errorVar)
         {
             CoOrd preProcess = new CoOrd();
 
@@ -447,6 +467,124 @@ namespace Coordinator
 
         }
         #endregion
+
+        #region Variables for Angular Transform
+        private double angle1;   //Waist Yaw       (허리 회전)
+        private double angle2;   //Neck Roll       (고개 좌우)
+        private double angle3;   //Neck Pitch      (고개 앞뒤)
+        private double angle4;   //Neck Yaw        (고개 회전)
+        private double angle5;   //LeftArm1        (왼팔 어깨 위아래)
+        private double angle6;   //LeftArm2        (왼팔 어깨 펼침)
+        private double angle7;   //LeftArm3        (왼팔 어깨 회전)
+        private double angle8;   //LeftArm4        (왼팔 팔꿈치 위아래)
+        private double angle9;   //LeftArm5        (왼팔 팔꿈치 회전)
+        private double angle10;  //LeftArm6        (왼팔 손목 꺽임)
+        private double angle11;  //RightArm1
+        private double angle12;  //RightArm2
+        private double angle13;  //RightArm3
+        private double angle14;  //RightArm4
+        private double angle15;  //RightArm5
+        private double angle16;  //RightArm6
+        #endregion
+        #region FunctionsForAngularTransform
+        public CoOrdXYZ Vectorize (CoOrd co1, CoOrd co2)
+        {
+            CoOrdXYZ result;
+            result.x = co1.x - co2.x;
+            result.y = co1.y - co2.y;
+            result.z = co1.z - co2.z;
+            
+            return result;
+        }
+
+        public float DotProduct(CoOrdXYZ vector1, CoOrdXYZ vector2)
+        {
+            float result;
+
+            result = (vector1.x * vector2.x) + (vector1.y * vector2.y) + (vector1.z * vector2.z);
+
+            return result;
+        }
+
+        public float VectorSize(CoOrdXYZ vector1)
+        {
+            float result;
+
+            
+            result = Convert.ToSingle(Math.Sqrt(Convert.ToDouble(square(vector1.x) + square(vector1.y) + square(vector1.z))));
+
+            return result;
+        }
+        
+        public double AngularTransfrom(CoOrd co1, CoOrd co2, CoOrd co3)
+        {
+            double result;
+
+            CoOrdXYZ vector1, vector2;
+
+            vector1 = Vectorize(co1, co2);
+            vector2 = Vectorize(co3, co2);
+
+            result = Math.Acos(((vector1.x * vector2.x) + (vector1.y * vector2.y) + (vector1.z * vector2.z)) / (VectorSize(vector1) * VectorSize(vector2)));
+
+            result = result * 180/Math.PI;
+            return result;
+        }
+        #endregion
+        #region Angular Transferring
+        void SendBuffer(string str)
+        {
+                TcpClient tc = new TcpClient("192.168.0.30", 5001);                   // 에버 제어 PC 아이피 확인 후 변경
+                NetworkStream stream = tc.GetStream();
+                Stopwatch sw = Stopwatch.StartNew();
+                byte[] check_sum = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+                int packet_type = 0x02;
+                int tr_no = 0;
+                int data_type = 5000;
+                string[] stringArray = new string[1492];
+                int t = 0;
+
+                    string data = str;
+                    byte[] buff = Encoding.ASCII.GetBytes(data);
+                    int data_len = data.Length;
+
+                    check_sum[0] = 0x55;
+                    check_sum[1] = (byte)(packet_type & 0xff);
+                    check_sum[2] = (byte)(tr_no & 0xff);
+                    check_sum[3] = (byte)((tr_no >> 8) & 0xff);
+                    check_sum[4] = (byte)(data_len & 0xff);
+                    check_sum[5] = (byte)((data_len >> 8) & 0xff);
+                    check_sum[6] = (byte)(data_type & 0xff);
+                    check_sum[7] = (byte)((data_type >> 8) & 0xff);
+
+                    int sum = check_sum[0] + check_sum[1] + check_sum[2] + check_sum[3] + check_sum[4] + check_sum[5] +
+                              check_sum[6] + check_sum[7];
+                    int data_sum = 0;
+
+                    for (int i = 0; i < data_len; i++)
+                    {
+                        data_sum += buff[i];
+                    }
+
+                    check_sum[8] = (byte)(sum & 0xff);
+                    check_sum[9] = (byte)(data_sum & 0xff);
+
+                    byte[] msg = new byte[check_sum.Length + buff.Length];
+                    Buffer.BlockCopy(check_sum, 0, msg, 0, check_sum.Length);
+                    Buffer.BlockCopy(buff, 0, msg, check_sum.Length, buff.Length);
+
+        
+
+
+                    stream.Write(msg, 0, msg.Length);
+
+                    stream.Close();
+                    tc.Close();
+                    System.Console.WriteLine("Finish");
+            
+        }
+        #endregion
+
         /*
         Region for all Functions and Variables
         */
@@ -460,11 +598,14 @@ namespace Coordinator
 
             //Calibration Thread
             new Thread(new ThreadStart(Calibration)).Start();
+            new Thread(new ThreadStart(Sending)).Start();
         }
 
         //Calibration
         public void Calibration()
         {
+
+            #region Variables for Calibration
             //Initialize 6 variables for Calibration
             calVar.thetaX = -0.3;
             calVar.thetaY = -0.3;
@@ -472,15 +613,18 @@ namespace Coordinator
             calVar.transX = -143;
             calVar.transY = 33;
             calVar.transZ = 29;
-
+            #endregion
+            #region Socket Listner
             //Fundamental Variables for Socket
-            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 11000);
+            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 5000);
             Socket sListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sListener.Bind(ipEndPoint);
             sListener.Listen(1024);
+            #endregion
 
             while (true)
             {
+                #region Socket Listner & Buffer
                 //Variables for Socket and Transport Coordination
                 int x = 0;
                 Socket handler = sListener.Accept();
@@ -490,9 +634,11 @@ namespace Coordinator
                 forDeserialize.Binder = new AllowAssemblyDeserializationBinder();
                 CoOrd buf = new CoOrd();
                 buf = Deserialize<CoOrd>(buffer);
+                #endregion
 
                 try
                 {
+
                     #region Get Joints
                     //Get PC1 Joints
                     if (buf.markerPC == 1)
@@ -569,15 +715,14 @@ namespace Coordinator
                                 wristRightPC2 = buf;
                                 break;
                         }
-                        #endregion
                     }
-
+                    #endregion
                     #region Kalman
                     //Kalman headPC1
                     headPC1Mat[0, 0] = headPC1.x;
                     headPC1Mat[1, 0] = headPC1.y;
                     headPC1Mat[2, 0] = headPC1.z;
-               
+
                     kalmanheadPC1 = new Kalman(6, 3, 0);
 
                     Emgu.CV.Matrix<float> headPC1state = headPC1Mat;
@@ -589,7 +734,7 @@ namespace Coordinator
                     kalmanheadPC1.MeasurementMatrix = headSynPC1.measurementMatrix;
 
                     Matrix<float> headPC1prediction = new Matrix<float>(3, 1);
-                        headPC1prediction=kalmanheadPC1.Predict();
+                    headPC1prediction = kalmanheadPC1.Predict();
                     MCvPoint3D32f predictPointheadPC1 = new MCvPoint3D32f(headPC1prediction[0, 0], headPC1prediction[1, 0], headPC1prediction[2, 0]);
                     MCvPoint3D32f measurePointheadPC1 = new MCvPoint3D32f(headSynPC1.GetMeasurement()[0, 0],
                         headSynPC1.GetMeasurement()[1, 0], headSynPC1.GetMeasurement()[2, 0]);
@@ -605,7 +750,7 @@ namespace Coordinator
                     headPC2Mat[0, 0] = headPC2.x;
                     headPC2Mat[1, 0] = headPC2.y;
                     headPC2Mat[2, 0] = headPC2.z;
-              
+
 
                     kalmanheadPC2 = new Kalman(6, 3, 0);
 
@@ -776,7 +921,7 @@ namespace Coordinator
                     spineBasePC2Mat[0, 0] = spineBasePC2.x;
                     spineBasePC2Mat[1, 0] = spineBasePC2.y;
                     spineBasePC2Mat[2, 0] = spineBasePC2.z;
-                    
+
                     kalmanspineBasePC2 = new Kalman(6, 3, 0);
 
                     Emgu.CV.Matrix<float> spineBasePC2state = spineBasePC2Mat;
@@ -1163,8 +1308,12 @@ namespace Coordinator
                     elbowLeftCar = preProcess(elbowLeftPC1.x, elbowLeftPC1.y, elbowLeftPC1.z, calVar);
                     elbowRightCar = preProcess(elbowRightPC1.x, elbowRightPC1.y, elbowRightPC1.z, calVar);
 
+                    neckCar.y=shoulderLeftCar.y;
+
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate { canvas.Children.Clear(); }));
                     #endregion
+                  
+
                     #region DrawSkeleton <Calibration>
                     //DrawSkeleton of Calibration
 
@@ -1211,7 +1360,7 @@ namespace Coordinator
                             Width = 20,
                             Height = 20
                         };
-                            
+
                         Canvas.SetLeft(drawLeftShoulder, shoulderLeftCar.x - drawLeftShoulder.Width / 2);
                         Canvas.SetTop(drawLeftShoulder, shoulderLeftCar.y - drawLeftShoulder.Height / 2);
                         canvas.Children.Add(drawLeftShoulder);
@@ -1423,6 +1572,7 @@ namespace Coordinator
                     //DrawSkeleton of Calibration ----------------> END <----------------
                     #endregion
 
+                    //Draw PC1&PC2
                     #region DrawSkeleton <PC1>
                     ////DrawSkeleton of PC1---------------- > START < ----------------
 
@@ -1924,18 +2074,50 @@ namespace Coordinator
 
                     ////DrawSkeleton of PC2---------------- > END < ----------------
                     #endregion
-                    
+
+                   
                 }
 
                 catch (Exception e)
                 {
                     Console.WriteLine(e.ToString());
                 }
-
             }
 
+            
         }
+        public void Sending()
+        {
+            #region Angular Transform
+           
+            while (true)
+            {
+                angle1 = 0;                                                                                         //허리회전
+                angle2 = 90-AngularTransfrom(headCar, neckCar, shoulderLeftCar);                                    //고개 좌우
+                angle3 = 180-AngularTransfrom(headCar, neckCar, spineMidCar);                                       //고개 앞뒤
+                angle4 = 0;                                                                                         //고개 회전
+                angle5 = 0;                                                                                         
+                angle6 = 180-AngularTransfrom(elbowLeftCar, shoulderLeftCar, neckCar);
+                angle7 = 0; //x
+                angle8 = 90-AngularTransfrom(shoulderLeftCar, elbowLeftCar, wristLeftCar);
+                angle9 = 0; //x 
+                angle10 = 0;//x
+                angle11 = 0;    
+                angle12 = 180-AngularTransfrom(elbowRightCar, shoulderRightCar, neckCar);
+                angle13 = 0; //x
+                angle14 = 90-AngularTransfrom(shoulderRightCar, elbowRightCar, wristRightCar);
+                angle15 = 0; //x
+                angle16 = 0; //x
 
+                string data = angle1 + "," + angle2 + "," + angle3 + "," + angle4 + "," + angle5 + "," + angle6 + "," + angle7 + "," + angle8 + "," + angle9 + "," + angle10 + "," + angle11 + "," + angle12 + "," + angle13 + "," + angle14 + "," + angle15 + "," + angle16;
+
+                Console.WriteLine(data);
+
+                SendBuffer(data);
+            }
+            
+            #endregion
+        }
     }
 }
 
