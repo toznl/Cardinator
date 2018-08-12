@@ -228,23 +228,23 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="opencv_calib3d2410.dll" />
-    <Content Include="opencv_contrib2410.dll" />
-    <Content Include="opencv_core2410.dll" />
-    <Content Include="opencv_features2d2410.dll" />
-    <Content Include="opencv_flann2410.dll" />
-    <Content Include="opencv_gpu2410.dll" />
-    <Content Include="opencv_highgui2410.dll" />
-    <Content Include="opencv_imgproc2410.dll" />
-    <Content Include="opencv_legacy2410.dll" />
-    <Content Include="opencv_ml2410.dll" />
-    <Content Include="opencv_nonfree2410.dll" />
-    <Content Include="opencv_objdetect2410.dll" />
-    <Content Include="opencv_photo2410.dll" />
-    <Content Include="opencv_stitching2410.dll" />
-    <Content Include="opencv_superres2410.dll" />
-    <Content Include="opencv_video2410.dll" />
-    <Content Include="opencv_videostab2410.dll" />
+    <Content Include="Properties\opencv_calib3d2410.dll" />
+    <Content Include="Properties\opencv_contrib2410.dll" />
+    <Content Include="Properties\opencv_core2410.dll" />
+    <Content Include="Properties\opencv_features2d2410.dll" />
+    <Content Include="Properties\opencv_flann2410.dll" />
+    <Content Include="Properties\opencv_gpu2410.dll" />
+    <Content Include="Properties\opencv_highgui2410.dll" />
+    <Content Include="Properties\opencv_imgproc2410.dll" />
+    <Content Include="Properties\opencv_legacy2410.dll" />
+    <Content Include="Properties\opencv_ml2410.dll" />
+    <Content Include="Properties\opencv_nonfree2410.dll" />
+    <Content Include="Properties\opencv_objdetect2410.dll" />
+    <Content Include="Properties\opencv_photo2410.dll" />
+    <Content Include="Properties\opencv_stitching2410.dll" />
+    <Content Include="Properties\opencv_superres2410.dll" />
+    <Content Include="Properties\opencv_video2410.dll" />
+    <Content Include="Properties\opencv_videostab2410.dll" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Angular_Transform\" />

@@ -478,13 +478,21 @@ namespace Coordinator
         private double angle7;   //LeftArm3        (왼팔 어깨 회전)
         private double angle8;   //LeftArm4        (왼팔 팔꿈치 위아래)
         private double angle9;   //LeftArm5        (왼팔 팔꿈치 회전)
-        private double angle10;  //LeftArm6        (왼팔 손목 꺽임)
-        private double angle11;  //RightArm1
-        private double angle12;  //RightArm2
-        private double angle13;  //RightArm3
-        private double angle14;  //RightArm4
-        private double angle15;  //RightArm5
-        private double angle16;  //RightArm6
+        private double angle10;  //LeftArm6        (왼팔 손목 꺾임)
+        private double angle11;  //RightArm1       (오른팔 어깨 위아래)
+        private double angle12;  //RightArm2       (오른팔 어깨 펼침)
+        private double angle13;  //RightArm3       (오른팔 어깨 회전)
+        private double angle14;  //RightArm4       (오른팔 팔꿈치 위아래)
+        private double angle15;  //RightArm5       (오른팔 팔꿈치 회전)
+        private double angle16;  //RightArm6       (오른팔 손목 꺾임)
+
+        private CoOrdXYZ defineVectorAngleArm;
+        private CoOrdXYZ defineVectorAngleLeftArmRotate;
+        private CoOrdXYZ defineVectorAngleRightArmRotate;
+
+
+
+
         #endregion
         #region FunctionsForAngularTransform
         public CoOrdXYZ Vectorize (CoOrd co1, CoOrd co2)
@@ -530,7 +538,99 @@ namespace Coordinator
             result = result * 180/Math.PI;
             return result;
         }
+
+        public double AngularTransform2(CoOrdXYZ vector1, CoOrdXYZ vector2)
+        {
+            double result;
+
+            result = Math.Acos(((vector1.x * vector2.x) + (vector1.y * vector2.y) + (vector1.z * vector2.z)) / (VectorSize(vector1) * VectorSize(vector2)));
+
+            result = result * 180 / Math.PI;
+
+            return result;
+        }
+
+        public CoOrdXYZ VectorFlat(CoOrd co1, CoOrd co2, CoOrd co3)
+        {
+            CoOrdXYZ result;
+
+            result.x = (co1.y * (co2.z - co3.z)) + (co2.y * (co3.z - co1.z)) + (co3.y * (co1.z - co2.z));
+            result.y = (co1.z * (co2.x - co3.x)) + (co2.z * (co3.x - co1.x)) + (co3.z * (co1.x - co2.x));
+            result.z = (co1.x * (co2.y - co3.y)) + (co2.x * (co3.y - co1.y)) + (co3.x * (co1.y - co2.y));
+
+            float sizeOfh = VectorSize(result);
+
+            result.x = result.x / sizeOfh;
+            result.y = result.y / sizeOfh;
+            result.z = result.z / sizeOfh;
+
+            return result;
+        }
+
+        public float ProjD(CoOrd co1, CoOrd co2, CoOrd co3)
+        {
+            float result;
+
+            CoOrdXYZ vectorFlat = VectorFlat(co1, co2, co3);
+            CoOrdXYZ vectorFlatNegative;
+            vectorFlatNegative.x = -vectorFlat.x;
+            vectorFlatNegative.y = -vectorFlat.y;
+            vectorFlatNegative.z = -vectorFlat.z;
+
+            CoOrdXYZ vectorOrd;
+            vectorOrd.x = 0;
+            vectorOrd.y = 0;
+            vectorOrd.z = 0;
+
+            result = DotProduct(vectorFlat, vectorOrd);
+
+            return result;
+
+        }
+
+        public CoOrdXYZ VectorProj (CoOrd co1, CoOrd co2, CoOrd co3, CoOrd co4, CoOrd co5)
+        {
+            CoOrdXYZ result;
+
+            CoOrdXYZ vectorFlat = VectorFlat(co1, co2, co3);
+            float planeD = ProjD(co1, co2, co3);
+            ;
+            float distanceCo4 = Math.Abs(((vectorFlat.x * co4.x) + (vectorFlat.y * co4.y) + (vectorFlat.z * co4.z) + planeD)) / VectorSize(vectorFlat);
+
+            CoOrdXYZ prjCo4;
+            prjCo4.x = co4.x - distanceCo4 * vectorFlat.x;
+            prjCo4.y = co4.y - distanceCo4 * vectorFlat.y;
+            prjCo4.z = co4.z - distanceCo4 * vectorFlat.z;
+
+
+            float distanceCo5 = Math.Abs(((vectorFlat.x * co5.x) + (vectorFlat.y * co5.y) + (vectorFlat.z * co5.z) + planeD)) / VectorSize(vectorFlat);
+
+            CoOrdXYZ prjCo5;
+            prjCo5.x = co5.x - distanceCo5 * vectorFlat.x;
+            prjCo5.y = co5.y - distanceCo5 * vectorFlat.y;
+            prjCo5.z = co5.z - distanceCo5 * vectorFlat.z;
+
+            result.x = co5.x - co4.x;
+            result.y = co5.y - co4.y;
+            result.z = co5.z - co4.z;
+
+            return result;
+        }
+
+        public double VectorProjAngle(CoOrd co1, CoOrd co2, CoOrd co3, CoOrd co4, CoOrd co5, CoOrdXYZ defineVector)
+        {
+            double result;
+
+            CoOrdXYZ prjVector = VectorProj(co1, co2, co3, co4, co5);
+
+            result = AngularTransform2(prjVector, defineVector);
+
+            return result;
+        }
+
+     
         #endregion
+        
         #region Angular Transferring
         void SendBuffer(string str)
         {
@@ -542,7 +642,6 @@ namespace Coordinator
                 int tr_no = 0;
                 int data_type = 5000;
                 string[] stringArray = new string[1492];
-                int t = 0;
 
                     string data = str;
                     byte[] buff = Encoding.ASCII.GetBytes(data);
@@ -2090,22 +2189,42 @@ namespace Coordinator
         {
             #region Angular Transform
            
-            while (true)
+            while (true)    
             {
+
+                CoOrd halfShoulder;
+
+                halfShoulder.x = shoulderRightCar.x - shoulderLeftCar.x;
+                halfShoulder.y = shoulderRightCar.y - shoulderLeftCar.y;
+                halfShoulder.z = shoulderRightCar.z - shoulderLeftCar.z;
+                halfShoulder.markerPC = 1;
+                halfShoulder.markerTrackingState = 0;
+                halfShoulder.markerType = 0;
+                
+
+                defineVectorAngleArm = Vectorize(spineBaseCar, neckCar);
+                defineVectorAngleLeftArmRotate = Vectorize(shoulderLeftCar, shoulderRightCar);
+                defineVectorAngleRightArmRotate = Vectorize(shoulderRightCar, shoulderLeftCar);
+
+                //머리
                 angle1 = 0;                                                                                         //허리회전
                 angle2 = 90-AngularTransfrom(headCar, neckCar, shoulderLeftCar);                                    //고개 좌우
                 angle3 = 180-AngularTransfrom(headCar, neckCar, spineMidCar);                                       //고개 앞뒤
                 angle4 = 0;                                                                                         //고개 회전
-                angle5 = 0;                                                                                         
-                angle6 = 180-AngularTransfrom(elbowLeftCar, shoulderLeftCar, neckCar);
-                angle7 = 0; //x
-                angle8 = 90-AngularTransfrom(shoulderLeftCar, elbowLeftCar, wristLeftCar);
+
+                //왼팔
+                angle5 = VectorProjAngle(neckCar, spineMidCar, spineBaseCar, shoulderLeftCar, elbowLeftCar, defineVectorAngleArm);          
+                angle6 = 90-AngularTransfrom(elbowLeftCar, shoulderLeftCar, neckCar);
+                angle7 = 0;
+                angle8 = 180-AngularTransfrom(shoulderLeftCar, elbowLeftCar, wristLeftCar);
                 angle9 = 0; //x 
                 angle10 = 0;//x
-                angle11 = 0;    
-                angle12 = 180-AngularTransfrom(elbowRightCar, shoulderRightCar, neckCar);
-                angle13 = 0; //x
-                angle14 = 90-AngularTransfrom(shoulderRightCar, elbowRightCar, wristRightCar);
+
+                //오른팔
+                angle11 = VectorProjAngle(neckCar, spineMidCar, spineBaseCar, shoulderRightCar, elbowRightCar, defineVectorAngleArm);
+                angle12 = 90-AngularTransfrom(elbowRightCar, shoulderRightCar, neckCar);
+                angle13 = 0;
+                angle14 = 180-AngularTransfrom(shoulderRightCar, elbowRightCar, wristRightCar);
                 angle15 = 0; //x
                 angle16 = 0; //x
 
@@ -2113,7 +2232,7 @@ namespace Coordinator
 
                 Console.WriteLine(data);
 
-                SendBuffer(data);
+                //SendBuffer(data);
             }
             
             #endregion
