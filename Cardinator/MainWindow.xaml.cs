@@ -524,7 +524,7 @@ namespace Coordinator
             return result;
         }
         
-        public double AngularTransfrom(CoOrd co1, CoOrd co2, CoOrd co3)
+        public double AngularTransform(CoOrd co1, CoOrd co2, CoOrd co3)
         {
             double result;
 
@@ -539,6 +539,8 @@ namespace Coordinator
             return result;
         }
 
+        
+
         public double AngularTransform2(CoOrdXYZ vector1, CoOrdXYZ vector2)
         {
             double result;
@@ -547,6 +549,21 @@ namespace Coordinator
 
             result = result * 180 / Math.PI;
 
+            return result;
+        }
+
+        public double AngularTransform3(CoOrd co1, CoOrd co2, CoOrd co3)
+        {
+            double result;
+
+            CoOrdXYZ vector1, vector2;
+
+            vector1 = Vectorize(co2, co1);
+            vector2 = Vectorize(co3, co2);
+
+            result = Math.Acos(((vector1.x * vector2.x) + (vector1.y * vector2.y) + (vector1.z * vector2.z)) / (VectorSize(vector1) * VectorSize(vector2)));
+
+            result = result * 180 / Math.PI;
             return result;
         }
 
@@ -594,7 +611,7 @@ namespace Coordinator
 
             CoOrdXYZ vectorFlat = VectorFlat(co1, co2, co3);
             float planeD = ProjD(co1, co2, co3);
-            ;
+            
             float distanceCo4 = Math.Abs(((vectorFlat.x * co4.x) + (vectorFlat.y * co4.y) + (vectorFlat.z * co4.z) + planeD)) / VectorSize(vectorFlat);
 
             CoOrdXYZ prjCo4;
@@ -610,9 +627,11 @@ namespace Coordinator
             prjCo5.y = co5.y - distanceCo5 * vectorFlat.y;
             prjCo5.z = co5.z - distanceCo5 * vectorFlat.z;
 
-            result.x = co5.x - co4.x;
-            result.y = co5.y - co4.y;
-            result.z = co5.z - co4.z;
+            result.x = prjCo5.x - prjCo4.x;
+            result.y = prjCo5.y - prjCo4.y;
+            result.z = prjCo5.z - prjCo4.z;
+
+            //double rVar = Math.Sqrt(square(co5.x - co4.x) + square(co5.y - co4.y) + square(co5.z - co4.z));
 
             return result;
         }
@@ -634,7 +653,7 @@ namespace Coordinator
         #region Angular Transferring
         void SendBuffer(string str)
         {
-                TcpClient tc = new TcpClient("192.168.0.30", 5001);                   // 에버 제어 PC 아이피 확인 후 변경
+                TcpClient tc = new TcpClient("192.168.0.100", 5001);                   // 에버 제어 PC 아이피 확인 후 변경
                 NetworkStream stream = tc.GetStream();
                 Stopwatch sw = Stopwatch.StartNew();
                 byte[] check_sum = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
@@ -2206,39 +2225,107 @@ namespace Coordinator
                 defineVectorAngleLeftArmRotate = Vectorize(shoulderLeftCar, shoulderRightCar);
                 defineVectorAngleRightArmRotate = Vectorize(shoulderRightCar, shoulderLeftCar);
 
+                
                 //머리
                 angle1 = 0;                                                                                         //허리회전
-                angle2 = 90-AngularTransfrom(headCar, neckCar, shoulderLeftCar);                                    //고개 좌우
-                angle3 = 180-AngularTransfrom(headCar, neckCar, spineMidCar);                                       //고개 앞뒤
+                angle2 = 90-AngularTransform(headCar, neckCar, shoulderLeftCar);                                    //고개 좌우
+                angle3 = 180-AngularTransform(headCar, neckCar, spineMidCar);                                       //고개 앞뒤
                 angle4 = 0;                                                                                         //고개 회전
 
                 //왼팔
                 angle5 = VectorProjAngle(neckCar, spineMidCar, spineBaseCar, shoulderLeftCar, elbowLeftCar, defineVectorAngleArm);          
-                angle6 = 90-AngularTransfrom(elbowLeftCar, shoulderLeftCar, neckCar);
+
+                if (angle5>110)
+                {
+                    angle5 = 100;
+                }
+
+                if (angle5<-30)
+                {
+                    angle5 = -30;
+                }
+
+                angle6 = 180-AngularTransform3(elbowLeftCar, shoulderLeftCar, neckCar)-110;
+
+                if (angle6 < 0)
+                {
+                    angle6 = 0;
+                }
+
+                if (angle6 > 80)
+                {   
+                    angle6 = 80;
+                }
+                
                 angle7 = 0;
-                angle8 = 180-AngularTransfrom(shoulderLeftCar, elbowLeftCar, wristLeftCar);
+                angle8 = AngularTransform3(shoulderLeftCar, elbowLeftCar, wristLeftCar);
                 angle9 = 0; //x 
                 angle10 = 0;//x
 
                 //오른팔
+
+                //angle11 = 80;
+                //angle12 = 80;
                 angle11 = VectorProjAngle(neckCar, spineMidCar, spineBaseCar, shoulderRightCar, elbowRightCar, defineVectorAngleArm);
-                angle12 = 90-AngularTransfrom(elbowRightCar, shoulderRightCar, neckCar);
+                if (angle11 > 110)
+                {
+                    angle11 = 100;
+                }
+
+                if (angle11 < -30)
+                {
+                    angle11 = -30;
+                }
+                angle12 = 180-AngularTransform3(elbowRightCar, shoulderRightCar, neckCar)-110;
+                if (angle12 < 0)
+                {
+                    angle12 = 0;
+                }
+
+                if (angle12 > 80)
+                {
+                    angle12 = 80;
+                }
+
                 angle13 = 0;
-                angle14 = 180-AngularTransfrom(shoulderRightCar, elbowRightCar, wristRightCar);
+                angle14 = AngularTransform3(shoulderRightCar, elbowRightCar, wristRightCar);
+
+                if (angle14>110)
+                {
+                    angle14 = 100;
+                }
+
                 angle15 = 0; //x
                 angle16 = 0; //x
 
+                //angle1 = 0;
+                //angle2 = 0;
+                //angle3 = 0;
+                //angle4 = 0;
+                //angle5 = 0;
+                //angle6 = 0;
+                //angle7 = 0;
+                //angle8 = 0;
+                //angle9 = 0;
+                //angle10 = 0;
+                //angle13 = 0;
+                //angle14 = 0;
+                //angle15 = 0;
+
+                //angle16 = 0;
+
                 string data = angle1 + "," + angle2 + "," + angle3 + "," + angle4 + "," + angle5 + "," + angle6 + "," + angle7 + "," + angle8 + "," + angle9 + "," + angle10 + "," + angle11 + "," + angle12 + "," + angle13 + "," + angle14 + "," + angle15 + "," + angle16;
 
-                Console.WriteLine(data);
+                Console.WriteLine("Angle11 : {0}, Angle12: {1} ", angle11, angle12);
 
-                //SendBuffer(data);
+                SendBuffer(data);
             }
-            
+
             #endregion
         }
     }
 }
+
 
 
 
