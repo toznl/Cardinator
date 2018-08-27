@@ -52,6 +52,22 @@ namespace Coordinator
 
         }
     }
+
+    public struct CoOrdXYZ
+    {
+        public float x;
+        public float y;
+        public float z;
+
+        public CoOrdXYZ(float x1, float y1, float z1)
+        {
+            x = x1;
+            y = y1;
+            z = z1;
+
+        }
+    }
+
     [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
     [Serializable]
     public struct CoOrd

@@ -447,6 +447,91 @@ namespace Coordinator
 
         }
         #endregion
+
+        #region Variables for Angular Transformation
+        private float angle1;
+        private float angle2;
+        private float angle3;
+        private float angle4;
+        private float angle5;
+        private float angle6;
+        private float angle7;
+        private float angle8;
+        private float angle9;
+        private float angle10;
+        private float angle11;
+        private float angle12;
+        #endregion
+        #region Functions for Angular Transformation
+
+        public CoOrdXYZ Vectorize(CoOrd co1, CoOrd co2)
+        {
+            CoOrdXYZ result;
+
+            result.x = co1.x - co2.x;
+            result.y = co1.y - co2.y;
+            result.z = co1.z - co2.z;
+            return result;
+        }
+
+        public float VectorSize(CoOrdXYZ vector1)
+        {
+            float result;
+
+            result = square(vector1.x) + square(vector1.y) + square(vector1.z);
+
+            return result;
+        }
+
+        public float AngularTransformation(CoOrd co1, CoOrd co2, CoOrd co3)
+        {
+            float result;
+
+            CoOrdXYZ vector1;
+            CoOrdXYZ vector2;
+            float vectorsize1;
+            float vectorsize2;
+
+
+            vector1 = Vectorize(co1, co2);
+            vector2 = Vectorize(co3, co2);
+            vectorsize1 = VectorSize(vector1);
+            vectorsize2 = VectorSize(vector2);
+            
+
+            result = Convert.ToSingle( Math.Acos(((vector1.x*vector2.x)+(vector1.y*vector2.y)+(vector1.z*vector2.z))/ (vectorsize1*vectorsize2)));
+
+            return result;
+        }
+
+        #endregion
+        #region Sender
+
+        void sendbuffer(ref byte[] buffer)
+        {
+            try
+            {
+                Socket sender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Parse("ipaddress"), 11000);
+
+                sender.Connect(ipEndPoint);
+                Console.WriteLine("SendBuffer to {0}", sender.RemoteEndPoint.ToString());
+
+                sender.Send(buffer);
+                sender.Dispose();
+                sender.Close();
+            }
+
+            catch (Exception e)
+            {
+                Console.WriteLine("Exception:{0}", e.ToString());
+            }
+
+        }
+
+        #endregion
+
         /*
         Region for all Functions and Variables
         */
@@ -465,6 +550,7 @@ namespace Coordinator
         //Calibration
         public void Calibration()
         {
+            #region Variables for Calibration
             //Initialize 6 variables for Calibration
             calVar.thetaX = -0.3;
             calVar.thetaY = -0.3;
@@ -472,15 +558,21 @@ namespace Coordinator
             calVar.transX = -143;
             calVar.transY = 33;
             calVar.transZ = 29;
-
+            #endregion
+            #region Socket Listener
             //Fundamental Variables for Socket
             IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 11000);
             Socket sListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             sListener.Bind(ipEndPoint);
             sListener.Listen(1024);
 
+            #endregion
+
+            
+
             while (true)
             {
+                #region Variables for Socket Receiving
                 //Variables for Socket and Transport Coordination
                 int x = 0;
                 Socket handler = sListener.Accept();
@@ -490,6 +582,7 @@ namespace Coordinator
                 forDeserialize.Binder = new AllowAssemblyDeserializationBinder();
                 CoOrd buf = new CoOrd();
                 buf = Deserialize<CoOrd>(buffer);
+                #endregion
 
                 try
                 {
@@ -1423,6 +1516,15 @@ namespace Coordinator
                     //DrawSkeleton of Calibration ----------------> END <----------------
                     #endregion
 
+                    #region Angular Transformation
+                    angle1 = AngularTransformation(headCar, spineMidCar, spineBaseCar);
+
+                    string sendBuffer="{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}", angle1, angle2, angle3, angle4, angle5, angle6, angle7, angle8, angle9, angle10, angle11, angle12;
+
+                    bytep[ buffer = Serialize()
+                    
+                    #endregion
+
                     #region DrawSkeleton <PC1>
                     ////DrawSkeleton of PC1---------------- > START < ----------------
 
@@ -1924,7 +2026,7 @@ namespace Coordinator
 
                     ////DrawSkeleton of PC2---------------- > END < ----------------
                     #endregion
-                    
+
                 }
 
                 catch (Exception e)
