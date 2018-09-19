@@ -41,6 +41,21 @@ namespace Coordinator
         /*
         Region for all Functions and Variables
         */
+        #region ScailingVariables
+        private float alpha_scale;
+        private float beta_scale;
+        private float gamma_scale;
+
+        private float[] scailing_vector = new float[3];
+        public float[] scailing_vector_temp = new float[3];
+        //Real Parameters of EveR Skeleton (cm)
+        private float wrist_elbow = 26;
+        private float elbow_shoulder = 32;
+        private float shoulder = 36;
+        private float head_neck = 15;
+        private float neck_spine = 44;
+
+        #endregion
         #region KalmanVariables
 
         private SyntheticData headSynPC1 = new SyntheticData();
@@ -341,7 +356,7 @@ namespace Coordinator
         }
 
         //Calibration of PC1, PC2
-        public CoOrd preProcess( float x, float y, float z, ErrorVar errorVar)
+        public CoOrd preProcess(float x, float y, float z, ErrorVar errorVar)
         {
             CoOrd preProcess = new CoOrd();
 
@@ -373,7 +388,7 @@ namespace Coordinator
             result = ((square(((Convert.ToSingle(errorVar.transZ)) - z1 + x * ((Convert.ToSingle(Math.Sin((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ))) - (Convert.ToSingle(Math.Cos((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY)))) + y * ((Convert.ToSingle(Math.Cos(errorVar.thetaZ))) * (Convert.ToSingle(Math.Sin((errorVar.thetaX + eta)))) + (Convert.ToSingle(Math.Cos((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ)))) + z * (Convert.ToSingle(Math.Cos((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Cos(errorVar.thetaY))))) + square(((Convert.ToSingle(errorVar.transY)) - y1 + x * ((Convert.ToSingle(Math.Cos((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) * (Convert.ToSingle(Math.Sin((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY)))) + y * ((Convert.ToSingle(Math.Cos((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) - (Convert.ToSingle(Math.Sin((errorVar.thetaX + eta)))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ)))) - z * (Convert.ToSingle(Math.Cos(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin((errorVar.thetaX + eta)))))) + square(((Convert.ToSingle(errorVar.transX)) - x1 + z * (Convert.ToSingle(Math.Sin(errorVar.thetaY))) + x * (Convert.ToSingle(Math.Cos(errorVar.thetaY))) * (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) - y * (Convert.ToSingle(Math.Cos(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ))))))
             - (square(((Convert.ToSingle(errorVar.transZ)) - z1 + x * ((Convert.ToSingle(Math.Sin(errorVar.thetaX))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ))) - (Convert.ToSingle(Math.Cos(errorVar.thetaX))) * (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY)))) + y * ((Convert.ToSingle(Math.Cos(errorVar.thetaZ))) * (Convert.ToSingle(Math.Sin(errorVar.thetaX))) + (Convert.ToSingle(Math.Cos(errorVar.thetaX))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ)))) + z * (Convert.ToSingle(Math.Cos(errorVar.thetaX))) * (Convert.ToSingle(Math.Cos(errorVar.thetaY))))) + square(((Convert.ToSingle(errorVar.transY)) - y1 + x * ((Convert.ToSingle(Math.Cos(errorVar.thetaX))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ))) + (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) * (Convert.ToSingle(Math.Sin(errorVar.thetaX))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY)))) + y * ((Convert.ToSingle(Math.Cos(errorVar.thetaX))) * (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) - (Convert.ToSingle(Math.Sin(errorVar.thetaX))) * (Convert.ToSingle(Math.Sin(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ)))) - z * (Convert.ToSingle(Math.Cos(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin(errorVar.thetaX))))) + square(((Convert.ToSingle(errorVar.transX)) - x1 + z * (Convert.ToSingle(Math.Sin(errorVar.thetaY))) + x * (Convert.ToSingle(Math.Cos(errorVar.thetaY))) * (Convert.ToSingle(Math.Cos(errorVar.thetaZ))) - y * (Convert.ToSingle(Math.Cos(errorVar.thetaY))) * (Convert.ToSingle(Math.Sin(errorVar.thetaZ))))))) / Convert.ToSingle(eta);
 
-            
+
 
             return result;
         }
@@ -398,7 +413,7 @@ namespace Coordinator
         }
 
 
-        
+
         public float errorFunc3(float x, float y, float z, float x1, float y1, float z1, ErrorVar errorVar, double eta)
         {
             float result;
@@ -426,7 +441,7 @@ namespace Coordinator
 
             return result;
         }
-        
+
         //GradientDecsent Diffrential 
         public ErrorVar gradientDecsent(
             float x0, float y0, float z0, float x1, float y1, float z1,
@@ -460,6 +475,7 @@ namespace Coordinator
             errorVar.transX = errorVar.transX - etaFlo * grad3;
             errorVar.transY = errorVar.transY - etaFlo * grad4;
             errorVar.transZ = errorVar.transZ - etaFlo * grad5;
+
 
             resultVar = errorVar;
 
@@ -495,13 +511,13 @@ namespace Coordinator
 
         #endregion
         #region FunctionsForAngularTransform
-        public CoOrdXYZ Vectorize (CoOrd co1, CoOrd co2)
+        public CoOrdXYZ Vectorize(CoOrd co1, CoOrd co2)
         {
             CoOrdXYZ result;
             result.x = co1.x - co2.x;
             result.y = co1.y - co2.y;
             result.z = co1.z - co2.z;
-            
+
             return result;
         }
 
@@ -518,12 +534,12 @@ namespace Coordinator
         {
             float result;
 
-            
+
             result = Convert.ToSingle(Math.Sqrt(Convert.ToDouble(square(vector1.x) + square(vector1.y) + square(vector1.z))));
 
             return result;
         }
-        
+
         public double AngularTransform(CoOrd co1, CoOrd co2, CoOrd co3)
         {
             double result;
@@ -535,11 +551,11 @@ namespace Coordinator
 
             result = Math.Acos(((vector1.x * vector2.x) + (vector1.y * vector2.y) + (vector1.z * vector2.z)) / (VectorSize(vector1) * VectorSize(vector2)));
 
-            result = result * 180/Math.PI;
+            result = result * 180 / Math.PI;
             return result;
         }
 
-        
+
 
         public double AngularTransform2(CoOrdXYZ vector1, CoOrdXYZ vector2)
         {
@@ -605,13 +621,13 @@ namespace Coordinator
 
         }
 
-        public CoOrdXYZ VectorProj (CoOrd co1, CoOrd co2, CoOrd co3, CoOrd co4, CoOrd co5)
+        public CoOrdXYZ VectorProj(CoOrd co1, CoOrd co2, CoOrd co3, CoOrd co4, CoOrd co5)
         {
             CoOrdXYZ result;
 
             CoOrdXYZ vectorFlat = VectorFlat(co1, co2, co3);
             float planeD = ProjD(co1, co2, co3);
-            
+
             float distanceCo4 = Math.Abs(((vectorFlat.x * co4.x) + (vectorFlat.y * co4.y) + (vectorFlat.z * co4.z) + planeD)) / VectorSize(vectorFlat);
 
             CoOrdXYZ prjCo4;
@@ -647,61 +663,134 @@ namespace Coordinator
             return result;
         }
 
-     
+        //public double VectorProjAngleRotation()
+
+
         #endregion
-        
+        public float distance(CoOrd dot1, CoOrd dot2)
+        {
+            float result;
+
+            result = Convert.ToSingle(Math.Sqrt(Math.Pow((dot1.x - dot2.x), 2) + Math.Pow((dot1.y - dot2.y), 2) + Math.Pow((dot1.z + dot2.z), 2)));
+
+            return result;
+        }
+
+        public CoOrd scale_skeleton(CoOrd co1, float[] scaleVector)
+        {
+            CoOrd result;
+
+            scaleVector = scailing_vector;
+
+            result.markerPC = co1.markerPC;
+            result.markerTrackingState = co1.markerTrackingState;
+            result.markerType = co1.markerType;
+            result.x = scailing_vector[0]*scailing_vector[0];
+            result.y = scailing_vector[1]*scailing_vector[1];
+            result.z = scailing_vector[2]*scailing_vector[2];
+
+            return result;
+        }
+
+        public float[] scale_vector_update(CoOrd head, CoOrd neck, CoOrd shoulder_left, CoOrd elbow_left, CoOrd wrist_left, CoOrd shoulder_right, CoOrd elbow_right, CoOrd wrist_right, CoOrd spine_mid, CoOrd spine_base)
+        {
+            float[] result = new float[3];
+
+            result = scailing_vector;
+
+            float error0;
+            float error1;
+            float error2;
+            float error3;
+            float error4;
+            float error_Sum;
+            float error_Sum_Temp;
+            float eta = 0.001f;
+
+            for(int i=0; )
+            error0 = wrist_elbow -  distance(scale_skeleton(wrist_left, result), scale_skeleton(elbow_left, result));
+            error1 = elbow_shoulder - distance(scale_skeleton(elbow_left, result), scale_skeleton(shoulder_left, result));
+            error2 = shoulder - distance(scale_skeleton(shoulder_right, result), scale_skeleton(shoulder_left, result));
+            error3 = head_neck - distance(scale_skeleton(head, result), scale_skeleton(neck, result));
+            error4 = neck_spine - distance(scale_skeleton(neck, result), scale_skeleton(spine_mid, result));
+
+            error_Sum = error0 + error1 + error2 + error3 + error4;
+            error_Sum_Temp = error_Sum;
+
+            result[0] = result[0] - eta * error_Sum;
+            result[1] = result[1] - eta * error_Sum;
+            result[2] = result[2] - eta * error_Sum;
+
+            error0 = wrist_elbow - distance(scale_skeleton(wrist_left, result), scale_skeleton(elbow_left, result));
+            error1 = elbow_shoulder - distance(scale_skeleton(elbow_left, result), scale_skeleton(shoulder_left, result));
+            error2 = shoulder - distance(scale_skeleton(shoulder_right, result), scale_skeleton(shoulder_left, result));
+            error3 = head_neck - distance(scale_skeleton(head, result), scale_skeleton(neck, result));
+            error4 = neck_spine - distance(scale_skeleton(neck, result), scale_skeleton(spine_mid, result));
+
+            error_Sum = error0 + error1 + error2 + error3 + error4;
+
+            if (error_Sum > error_Sum_Temp)
+            {
+
+            }
+
+
+            return result;
+        }
+
         #region Angular Transferring
         void SendBuffer(string str)
         {
-                TcpClient tc = new TcpClient("192.168.0.100", 5001);                   // 에버 제어 PC 아이피 확인 후 변경
-                NetworkStream stream = tc.GetStream();
-                Stopwatch sw = Stopwatch.StartNew();
-                byte[] check_sum = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-                int packet_type = 0x02;
-                int tr_no = 0;
-                int data_type = 5000;
-                string[] stringArray = new string[1492];
+            TcpClient tc = new TcpClient("192.168.0.100", 5001);                   // 에버 제어 PC 아이피 확인 후 변경
+            NetworkStream stream = tc.GetStream();
+            Stopwatch sw = Stopwatch.StartNew();
+            byte[] check_sum = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            int packet_type = 0x02;
+            int tr_no = 0;
+            int data_type = 5000;
+            string[] stringArray = new string[1492];
 
-                    string data = str;
-                    byte[] buff = Encoding.ASCII.GetBytes(data);
-                    int data_len = data.Length;
+            string data = str;
+            byte[] buff = Encoding.ASCII.GetBytes(data);
+            int data_len = data.Length;
 
-                    check_sum[0] = 0x55;
-                    check_sum[1] = (byte)(packet_type & 0xff);
-                    check_sum[2] = (byte)(tr_no & 0xff);
-                    check_sum[3] = (byte)((tr_no >> 8) & 0xff);
-                    check_sum[4] = (byte)(data_len & 0xff);
-                    check_sum[5] = (byte)((data_len >> 8) & 0xff);
-                    check_sum[6] = (byte)(data_type & 0xff);
-                    check_sum[7] = (byte)((data_type >> 8) & 0xff);
+            check_sum[0] = 0x55;
+            check_sum[1] = (byte)(packet_type & 0xff);
+            check_sum[2] = (byte)(tr_no & 0xff);
+            check_sum[3] = (byte)((tr_no >> 8) & 0xff);
+            check_sum[4] = (byte)(data_len & 0xff);
+            check_sum[5] = (byte)((data_len >> 8) & 0xff);
+            check_sum[6] = (byte)(data_type & 0xff);
+            check_sum[7] = (byte)((data_type >> 8) & 0xff);
 
-                    int sum = check_sum[0] + check_sum[1] + check_sum[2] + check_sum[3] + check_sum[4] + check_sum[5] +
-                              check_sum[6] + check_sum[7];
-                    int data_sum = 0;
+            int sum = check_sum[0] + check_sum[1] + check_sum[2] + check_sum[3] + check_sum[4] + check_sum[5] +
+                      check_sum[6] + check_sum[7];
+            int data_sum = 0;
 
-                    for (int i = 0; i < data_len; i++)
-                    {
-                        data_sum += buff[i];
-                    }
+            for (int i = 0; i < data_len; i++)
+            {
+                data_sum += buff[i];
+            }
 
-                    check_sum[8] = (byte)(sum & 0xff);
-                    check_sum[9] = (byte)(data_sum & 0xff);
+            check_sum[8] = (byte)(sum & 0xff);
+            check_sum[9] = (byte)(data_sum & 0xff);
 
-                    byte[] msg = new byte[check_sum.Length + buff.Length];
-                    Buffer.BlockCopy(check_sum, 0, msg, 0, check_sum.Length);
-                    Buffer.BlockCopy(buff, 0, msg, check_sum.Length, buff.Length);
-
-        
+            byte[] msg = new byte[check_sum.Length + buff.Length];
+            Buffer.BlockCopy(check_sum, 0, msg, 0, check_sum.Length);
+            Buffer.BlockCopy(buff, 0, msg, check_sum.Length, buff.Length);
 
 
-                    stream.Write(msg, 0, msg.Length);
 
-                    stream.Close();
-                    tc.Close();
-                    System.Console.WriteLine("Finish");
-            
+
+            stream.Write(msg, 0, msg.Length);
+
+            stream.Close();
+            tc.Close();
+            System.Console.WriteLine("Finish");
+
         }
         #endregion
+
 
         /*
         Region for all Functions and Variables
@@ -731,6 +820,8 @@ namespace Coordinator
             calVar.transX = -143;
             calVar.transY = 33;
             calVar.transZ = 29;
+
+
             #endregion
             #region Socket Listner
             //Fundamental Variables for Socket
@@ -739,6 +830,7 @@ namespace Coordinator
             sListener.Bind(ipEndPoint);
             sListener.Listen(1024);
             #endregion
+
 
             while (true)
             {
@@ -1426,11 +1518,11 @@ namespace Coordinator
                     elbowLeftCar = preProcess(elbowLeftPC1.x, elbowLeftPC1.y, elbowLeftPC1.z, calVar);
                     elbowRightCar = preProcess(elbowRightPC1.x, elbowRightPC1.y, elbowRightPC1.z, calVar);
 
-                    neckCar.y=shoulderLeftCar.y;
+                    neckCar.y = shoulderLeftCar.y;
 
                     Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate { canvas.Children.Clear(); }));
                     #endregion
-                  
+
 
                     #region DrawSkeleton <Calibration>
                     //DrawSkeleton of Calibration
@@ -1692,6 +1784,10 @@ namespace Coordinator
 
                     //Draw PC1&PC2
                     #region DrawSkeleton <PC1>
+
+
+
+
                     ////DrawSkeleton of PC1---------------- > START < ----------------
 
                     //DrawSkeleton
@@ -1720,7 +1816,7 @@ namespace Coordinator
                     //        Fill = Brushes.Orange,
                     //        Width = 20,
                     //        Height = 20
-                    //    };
+                    //    };    
 
                     //    Canvas.SetLeft(drawNeck, neckPC1.x - drawNeck.Width / 2);
                     //    Canvas.SetTop(drawNeck, neckPC1.y - drawNeck.Height / 2);
@@ -2193,7 +2289,7 @@ namespace Coordinator
                     ////DrawSkeleton of PC2---------------- > END < ----------------
                     #endregion
 
-                   
+
                 }
 
                 catch (Exception e)
@@ -2202,50 +2298,51 @@ namespace Coordinator
                 }
             }
 
-            
+
         }
         public void Sending()
         {
             #region Angular Transform
-           
-            while (true)    
+
+            while (true)
             {
 
                 CoOrd halfShoulder;
 
-                halfShoulder.x = shoulderRightCar.x - shoulderLeftCar.x;
-                halfShoulder.y = shoulderRightCar.y - shoulderLeftCar.y;
-                halfShoulder.z = shoulderRightCar.z - shoulderLeftCar.z;
+                halfShoulder.x = (shoulderRightCar.x - shoulderLeftCar.x) / 2;
+                halfShoulder.y = (shoulderRightCar.y - shoulderLeftCar.y) / 2;
+                halfShoulder.z = (shoulderRightCar.z - shoulderLeftCar.z) / 2;
                 halfShoulder.markerPC = 1;
                 halfShoulder.markerTrackingState = 0;
                 halfShoulder.markerType = 0;
-                
+
 
                 defineVectorAngleArm = Vectorize(spineBaseCar, neckCar);
-                defineVectorAngleLeftArmRotate = Vectorize(shoulderLeftCar, shoulderRightCar);
-                defineVectorAngleRightArmRotate = Vectorize(shoulderRightCar, shoulderLeftCar);
 
-                
+                defineVectorAngleLeftArmRotate = Vectorize(shoulderRightCar, shoulderLeftCar);
+                defineVectorAngleRightArmRotate = Vectorize(shoulderLeftCar, shoulderRightCar);
+
+
                 //머리
                 angle1 = 0;                                                                                         //허리회전
-                angle2 = 90-AngularTransform(headCar, neckCar, shoulderLeftCar);                                    //고개 좌우
-                angle3 = 180-AngularTransform(headCar, neckCar, spineMidCar);                                       //고개 앞뒤
+                angle2 = 90 - AngularTransform(headCar, neckCar, shoulderLeftCar);                                    //고개 좌우
+                angle3 = 180 - AngularTransform(headCar, neckCar, spineMidCar);                                       //고개 앞뒤
                 angle4 = 0;                                                                                         //고개 회전
 
                 //왼팔
-                angle5 = VectorProjAngle(neckCar, spineMidCar, spineBaseCar, shoulderLeftCar, elbowLeftCar, defineVectorAngleArm);          
+                angle5 = VectorProjAngle(neckCar, spineMidCar, spineBaseCar, shoulderLeftCar, elbowLeftCar, defineVectorAngleArm);
 
-                if (angle5>110)
+                if (angle5 > 110)
                 {
                     angle5 = 100;
                 }
 
-                if (angle5<-30)
+                if (angle5 < -30)
                 {
                     angle5 = -30;
                 }
 
-                angle6 = 180-AngularTransform3(elbowLeftCar, shoulderLeftCar, neckCar)-110;
+                angle6 = 180 - AngularTransform3(elbowLeftCar, shoulderLeftCar, neckCar) - 110;
 
                 if (angle6 < 0)
                 {
@@ -2253,19 +2350,28 @@ namespace Coordinator
                 }
 
                 if (angle6 > 80)
-                {   
+                {
                     angle6 = 80;
                 }
-                
-                angle7 = 0;
+
+
+                angle7 = VectorProjAngle(shoulderLeftCar, halfShoulder, shoulderRightCar, elbowLeftCar, wristLeftCar, defineVectorAngleLeftArmRotate) - 70;
+                if (angle7 < -40)
+                {
+                    angle7 = -40;
+                }
+
+                if (angle7 > 35)
+                {
+                    angle7 = 35;
+                }
+
                 angle8 = AngularTransform3(shoulderLeftCar, elbowLeftCar, wristLeftCar);
                 angle9 = 0; //x 
                 angle10 = 0;//x
 
                 //오른팔
 
-                //angle11 = 80;
-                //angle12 = 80;
                 angle11 = VectorProjAngle(neckCar, spineMidCar, spineBaseCar, shoulderRightCar, elbowRightCar, defineVectorAngleArm);
                 if (angle11 > 110)
                 {
@@ -2276,7 +2382,7 @@ namespace Coordinator
                 {
                     angle11 = -30;
                 }
-                angle12 = 180-AngularTransform3(elbowRightCar, shoulderRightCar, neckCar)-110;
+                angle12 = 180 - AngularTransform3(elbowRightCar, shoulderRightCar, neckCar) - 110;
                 if (angle12 < 0)
                 {
                     angle12 = 0;
@@ -2287,10 +2393,21 @@ namespace Coordinator
                     angle12 = 80;
                 }
 
-                angle13 = 0;
+                angle13 = VectorProjAngle(shoulderLeftCar, halfShoulder, shoulderRightCar, elbowRightCar, wristRightCar, defineVectorAngleRightArmRotate) - 90;
+                if (angle13 < -40)
+                {
+                    angle13 = -40;
+                }
+
+                if (angle13 > 35)
+                {
+                    angle13 = 35;
+                }
+
+
                 angle14 = AngularTransform3(shoulderRightCar, elbowRightCar, wristRightCar);
 
-                if (angle14>110)
+                if (angle14 > 110)
                 {
                     angle14 = 100;
                 }
@@ -2298,25 +2415,9 @@ namespace Coordinator
                 angle15 = 0; //x
                 angle16 = 0; //x
 
-                //angle1 = 0;
-                //angle2 = 0;
-                //angle3 = 0;
-                //angle4 = 0;
-                //angle5 = 0;
-                //angle6 = 0;
-                //angle7 = 0;
-                //angle8 = 0;
-                //angle9 = 0;
-                //angle10 = 0;
-                //angle13 = 0;
-                //angle14 = 0;
-                //angle15 = 0;
-
-                //angle16 = 0;
-
                 string data = angle1 + "," + angle2 + "," + angle3 + "," + angle4 + "," + angle5 + "," + angle6 + "," + angle7 + "," + angle8 + "," + angle9 + "," + angle10 + "," + angle11 + "," + angle12 + "," + angle13 + "," + angle14 + "," + angle15 + "," + angle16;
 
-                Console.WriteLine("Angle11 : {0}, Angle12: {1} ", angle11, angle12);
+                //Console.WriteLine("Angle11 : {0} ", angle13);
 
                 SendBuffer(data);
             }
