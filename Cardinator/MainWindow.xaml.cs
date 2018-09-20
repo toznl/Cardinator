@@ -42,18 +42,24 @@ namespace Coordinator
         Region for all Functions and Variables
         */
         #region ScailingVariables
-        private float alpha_scale;
-        private float beta_scale;
-        private float gamma_scale;
+        private float alpha_scalePC1;
+        private float beta_scalePC1;
+        private float gamma_scalePC1;
+        private float alpha_scalePC2;
+        private float beta_scalePC2;
+        private float gamma_scalePC2;
 
-        private float[] scailing_vector = new float[3];
+
+        private float[] scailing_vectorPC1 = new float[3];
+        private float[] scailing_vectorPC2 = new float[3];
         public float[] scailing_vector_temp = new float[3];
+
         //Real Parameters of EveR Skeleton (cm)
-        private float wrist_elbow = 26;
-        private float elbow_shoulder = 32;
-        private float shoulder = 36;
-        private float head_neck = 15;
-        private float neck_spine = 44;
+        private static float wrist_elbow = 26;
+        private static float elbow_shoulder = 32;
+        private static float shoulder = 36;
+        private static float head_neck = 15;
+        private static float neck_spine = 44;
 
         #endregion
         #region KalmanVariables
@@ -667,11 +673,14 @@ namespace Coordinator
 
 
         #endregion
+        #region Scailing Functions
         public float distance(CoOrd dot1, CoOrd dot2)
         {
             float result;
 
-            result = Convert.ToSingle(Math.Sqrt(Math.Pow((dot1.x - dot2.x), 2) + Math.Pow((dot1.y - dot2.y), 2) + Math.Pow((dot1.z + dot2.z), 2)));
+            result = Convert.ToSingle(Math.Sqrt( Math.Pow(Convert.ToDouble(dot1.x - dot2.x), 2)+ Math.Pow(Convert.ToDouble(dot1.y - dot2.y), 2)+ Math.Pow(Convert.ToDouble(dot1.z - dot2.z), 2)));
+
+            //Console.WriteLine(result);
 
             return result;
         }
@@ -680,64 +689,89 @@ namespace Coordinator
         {
             CoOrd result;
 
-            scaleVector = scailing_vector;
-
             result.markerPC = co1.markerPC;
             result.markerTrackingState = co1.markerTrackingState;
             result.markerType = co1.markerType;
-            result.x = scailing_vector[0]*scailing_vector[0];
-            result.y = scailing_vector[1]*scailing_vector[1];
-            result.z = scailing_vector[2]*scailing_vector[2];
+            result.x = co1.x * scaleVector[0];
+            result.y = co1.y * scaleVector[1];
+            result.z = co1.z * scaleVector[2];
 
             return result;
         }
 
-        public float[] scale_vector_update(CoOrd head, CoOrd neck, CoOrd shoulder_left, CoOrd elbow_left, CoOrd wrist_left, CoOrd shoulder_right, CoOrd elbow_right, CoOrd wrist_right, CoOrd spine_mid, CoOrd spine_base)
+        public float[] scale_vector_update(CoOrd head, CoOrd neck, CoOrd shoulder_left, CoOrd elbow_left, CoOrd wrist_left, CoOrd shoulder_right, CoOrd elbow_right, CoOrd wrist_right, CoOrd spine_mid, CoOrd spine_base, float[] scale_Vector)
         {
             float[] result = new float[3];
+            result[0] = 1;
+            result[1] = 1;
+            result[2] = 1;
+            result = scale_Vector;
 
-            result = scailing_vector;
+            float error0=0;
+            float error1=0;
+            float error2=0;
+            float error3=0;
+            float error4=0;
 
-            float error0;
-            float error1;
-            float error2;
-            float error3;
-            float error4;
-            float error_Sum;
+            float error_Sum = 1;
+
+            float errorAlpha = 0.1f;
+            float errorBeta = 0.1f;
+            float errorGamma = 0.1f;
+
+
+            float eta = 0.1f;
             float error_Sum_Temp;
-            float eta = 0.001f;
 
-            for(int i=0; )
-            error0 = wrist_elbow -  distance(scale_skeleton(wrist_left, result), scale_skeleton(elbow_left, result));
-            error1 = elbow_shoulder - distance(scale_skeleton(elbow_left, result), scale_skeleton(shoulder_left, result));
-            error2 = shoulder - distance(scale_skeleton(shoulder_right, result), scale_skeleton(shoulder_left, result));
-            error3 = head_neck - distance(scale_skeleton(head, result), scale_skeleton(neck, result));
-            error4 = neck_spine - distance(scale_skeleton(neck, result), scale_skeleton(spine_mid, result));
 
-            error_Sum = error0 + error1 + error2 + error3 + error4;
-            error_Sum_Temp = error_Sum;
 
-            result[0] = result[0] - eta * error_Sum;
-            result[1] = result[1] - eta * error_Sum;
-            result[2] = result[2] - eta * error_Sum;
-
-            error0 = wrist_elbow - distance(scale_skeleton(wrist_left, result), scale_skeleton(elbow_left, result));
-            error1 = elbow_shoulder - distance(scale_skeleton(elbow_left, result), scale_skeleton(shoulder_left, result));
-            error2 = shoulder - distance(scale_skeleton(shoulder_right, result), scale_skeleton(shoulder_left, result));
-            error3 = head_neck - distance(scale_skeleton(head, result), scale_skeleton(neck, result));
-            error4 = neck_spine - distance(scale_skeleton(neck, result), scale_skeleton(spine_mid, result));
-
-            error_Sum = error0 + error1 + error2 + error3 + error4;
-
-            if (error_Sum > error_Sum_Temp)
+            while ( error_Sum > 0.1)
             {
+                error0 = wrist_elbow - distance((scale_skeleton(wrist_left, result)), (scale_skeleton(elbow_left, result)));
+                error1 = elbow_shoulder - distance(scale_skeleton(elbow_left, result), scale_skeleton(shoulder_left, result));
+                error2 = shoulder - distance(scale_skeleton(shoulder_right, result), scale_skeleton(shoulder_left, result));
+                error3 = head_neck - distance(scale_skeleton(head, result), scale_skeleton(neck, result));
+                error4 = neck_spine - distance(scale_skeleton(neck, result), scale_skeleton(spine_mid, result));
+
+                error_Sum = error0 + error1 + error2 + error3 + error4; // Error_Sum
+                error_Sum_Temp = error_Sum;
+                Console.WriteLine(scale_skeleton(wrist_left, scale_Vector).x);
+                //Console.WriteLine(error0);
+
+
+                result[0] = result[0] - eta * errorAlpha;
+                result[1] = result[1] - eta * errorBeta;
+                result[2] = result[2] - eta * errorGamma;
+
+                error0 = Math.Abs(wrist_elbow - distance(scale_skeleton(wrist_left, result), scale_skeleton(elbow_left, result)));
+                error1 = Math.Abs(elbow_shoulder - distance(scale_skeleton(elbow_left, result), scale_skeleton(shoulder_left, result)));
+                error2 = Math.Abs(shoulder - distance(scale_skeleton(shoulder_right, result), scale_skeleton(shoulder_left, result)));
+                error3 = Math.Abs(head_neck - distance(scale_skeleton(head, result), scale_skeleton(neck, result)));
+                error4 = Math.Abs(neck_spine - distance(scale_skeleton(neck, result), scale_skeleton(spine_mid, result)));
+
+                error_Sum = error0 + error1 + error2 + error3 + error4;
+
 
             }
 
-
             return result;
         }
 
+        public CoOrd setScreenMid(float x, float y, CoOrd co)
+        {
+            CoOrd result;
+
+            result.markerPC = co.markerPC;
+            result.markerTrackingState = co.markerTrackingState;
+            result.markerType = co.markerType;
+
+            result.x = co.x - x;
+            result.y = co.y - y;
+            result.z = co.z;
+
+            return result;
+        }
+        #endregion
         #region Angular Transferring
         void SendBuffer(string str)
         {
@@ -786,7 +820,6 @@ namespace Coordinator
 
             stream.Close();
             tc.Close();
-            System.Console.WriteLine("Finish");
 
         }
         #endregion
@@ -820,6 +853,21 @@ namespace Coordinator
             calVar.transX = -143;
             calVar.transY = 33;
             calVar.transZ = 29;
+
+            alpha_scalePC1 = 1;
+            beta_scalePC1 = 1;
+            gamma_scalePC1 = 1;
+            alpha_scalePC2 = 1;
+            beta_scalePC2 = 1;
+            gamma_scalePC2 = 1;
+
+
+            scailing_vectorPC1[0] = alpha_scalePC1;
+            scailing_vectorPC1[1] = beta_scalePC1;
+            scailing_vectorPC1[2] = gamma_scalePC1;
+            scailing_vectorPC2[0] = alpha_scalePC2;
+            scailing_vectorPC2[1] = beta_scalePC2;
+            scailing_vectorPC2[2] = gamma_scalePC2;
 
 
             #endregion
@@ -1497,6 +1545,41 @@ namespace Coordinator
                     wristRightPC2.y = estimatedwristRightPC2Point.y;
                     wristRightPC2.z = estimatedwristRightPC2Point.z;
                     #endregion
+                    //Progressing
+                    #region Scailing
+
+                    //scailing_vectorPC1 = scale_vector_update(headPC1, neckPC1, shoulderLeftPC1, elbowLeftPC1, wristLeftPC1, shoulderRightPC1, elbowRightPC1, wristRightPC1, spineMidPC1, spineBasePC1, scailing_vectorPC1);
+                    //scailing_vectorPC2 = scale_vector_update(headPC2, neckPC2, shoulderLeftPC2, elbowLeftPC2, wristLeftPC2, shoulderRightPC2, elbowRightPC2, wristRightPC2, spineMidPC2, spineBasePC2, scailing_vectorPC2);
+
+
+                    //Console.WriteLine("Alpha = {0}, Beta = {1}, Gamma = {2}", scailing_vectorPC1[0], scailing_vectorPC1[1], scailing_vectorPC1[2]);
+
+                    //headPC1 = scale_skeleton(headPC1, scailing_vectorPC1);
+                    //neckPC1 = scale_skeleton(neckPC1, scailing_vectorPC1);
+                    //spineMidPC1 = scale_skeleton(spineMidPC1, scailing_vectorPC1);
+                    //spineBasePC1 = scale_skeleton(spineBasePC1, scailing_vectorPC1);
+                    //shoulderLeftPC1 = scale_skeleton(shoulderLeftPC1, scailing_vectorPC1);
+                    //elbowLeftPC1 = scale_skeleton(elbowLeftPC1, scailing_vectorPC1);
+                    //wristLeftPC1 = scale_skeleton(wristLeftPC1, scailing_vectorPC1);
+                    //shoulderRightPC1 = scale_skeleton(shoulderRightPC1, scailing_vectorPC1);
+                    //elbowRightPC1 = scale_skeleton(elbowRightPC1, scailing_vectorPC1);
+                    //wristRightPC1 = scale_skeleton(wristRightPC1, scailing_vectorPC1);
+
+
+                    //headPC2 = scale_skeleton(headPC2, scailing_vectorPC2);
+                    //neckPC2 = scale_skeleton(neckPC2, scailing_vectorPC2);
+                    //spineMidPC2 = scale_skeleton(spineMidPC2, scailing_vectorPC2);
+                    //spineBasePC2 = scale_skeleton(spineBasePC2, scailing_vectorPC2);
+                    //shoulderLeftPC2 = scale_skeleton(shoulderLeftPC2, scailing_vectorPC2);
+                    //elbowLeftPC2 = scale_skeleton(elbowLeftPC2, scailing_vectorPC2);
+                    //wristLeftPC2 = scale_skeleton(wristLeftPC2, scailing_vectorPC2);
+                    //shoulderRightPC2 = scale_skeleton(shoulderRightPC2, scailing_vectorPC2);
+                    //elbowRightPC2 = scale_skeleton(elbowRightPC2, scailing_vectorPC2);
+                    //wristRightPC2 = scale_skeleton(wristRightPC2, scailing_vectorPC2);
+
+
+                    #endregion 
+
                     #region Calibration
                     //Gradient Decsent
                     calVar = gradientDecsent(
@@ -1520,7 +1603,21 @@ namespace Coordinator
 
                     neckCar.y = shoulderLeftCar.y;
 
-                    Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate { canvas.Children.Clear(); }));
+                    float screenMidX = spineMidCar.x - 153.5f;
+                    float screenMidY = spineMidCar.y - 220;
+
+                    headCar = setScreenMid(screenMidX, screenMidY, headCar);
+                    neckCar = setScreenMid(screenMidX, screenMidY, neckCar);
+                    spineBaseCar = setScreenMid(screenMidX, screenMidY, spineBaseCar);
+                    spineMidCar = setScreenMid(screenMidX, screenMidY, spineMidCar);
+                    shoulderLeftCar = setScreenMid(screenMidX, screenMidY, shoulderLeftCar);
+                    shoulderRightCar = setScreenMid(screenMidX, screenMidY, shoulderRightCar);
+                    wristLeftCar = setScreenMid(screenMidX, screenMidY, wristLeftCar);
+                    wristRightCar = setScreenMid(screenMidX, screenMidY, wristRightCar);
+                    elbowLeftCar = setScreenMid(screenMidX, screenMidY, elbowLeftCar);
+                    elbowRightCar = setScreenMid(screenMidX, screenMidY, elbowRightCar);
+
+                    Console.WriteLine("thetaX = {0}, thetaY = {1}, thetaZ = {2}", calVar.thetaX, calVar.thetaY, calVar.thetaZ);
                     #endregion
 
 
@@ -1677,6 +1774,7 @@ namespace Coordinator
                         Canvas.SetTop(drawSpineMid, spineMidCar.y - drawSpineMid.Height / 2);
                         canvas.Children.Add(drawSpineMid);
                     }));
+
                     try
                     {
                         Dispatcher.Invoke(DispatcherPriority.Normal, new Action(delegate
