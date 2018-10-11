@@ -64,7 +64,6 @@ namespace Coordinator
             x = x1;
             y = y1;
             z = z1;
-
         }
     }
 
@@ -104,10 +103,6 @@ namespace Coordinator
 
 
     }
-   
-
-    
-
 
     public partial class RunServer : UserControl
     {

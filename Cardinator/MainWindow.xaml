@@ -3,10 +3,69 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d3="clr-namespace:InteractiveDataDisplay.WPF;assembly=InteractiveDataDisplay.WPF"
         xmlns:local="clr-namespace:Coordinator"
         mc:Ignorable="d"
-        Title="Coordinator" Height="550" Width="450" Background="Black">
-    <Grid x:Name="root">
-        <Canvas Name="canvas" Width="400" Height="500"/>
+        Title="Calibration UI" Height="548.809" Width="1305.224" Background="White">
+
+    <Grid x:Name="root" Margin="0,18,883.667,13.333">
+
+        <Border
+            BorderThickness="2"
+            BorderBrush="Gray"
+            Background="White"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Top"
+            Width="387"
+            Height="440" Margin="10,38,10,0">
+            <Canvas Name="canvas" Margin="21,8,17.667,8"/>
+        </Border>
+
+        <Label Content="Calibrationed Skeleton" HorizontalAlignment="Left" Height="28" Margin="4,16,0,0" VerticalAlignment="Top" Width="154" />
+
+        <Grid HorizontalAlignment="Left" Height="495" Margin="402,0,-343,-7" VerticalAlignment="Top" Width="348" >
+            <Label Content="Skeleton &lt;Kinect1&gt;" HorizontalAlignment="Left" Height="28" Margin="1,29,0,0" VerticalAlignment="Top" Width="131" />
+            <Label Content="[Skeleton Joints of Two Kinect]" HorizontalAlignment="Left" Height="28" Margin="73,10,0,0" VerticalAlignment="Top" Width="189" />
+            <Label Content="Skeleton &lt;Kinect2&gt;" HorizontalAlignment="Left" Height="28" Margin="0,259,0,0" VerticalAlignment="Top" Width="131" />
+            <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="193" Margin="10,51,0,0" Stroke="Black" VerticalAlignment="Top" Width="328"/>
+            <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="193" Margin="10,282,0,0" Stroke="Black" VerticalAlignment="Top" Width="328"/>
+            <DataGrid HorizontalAlignment="Left" Height="173" Margin="17,62,0,0" VerticalAlignment="Top" Width="311"/>
+        </Grid>
+        <Grid HorizontalAlignment="Left" Height="457" Margin="755,21,-610,0" VerticalAlignment="Top" Width="270">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="200*"/>
+                <ColumnDefinition Width="0*"/>
+                <ColumnDefinition Width="7*"/>
+                <ColumnDefinition Width="4*"/>
+                <ColumnDefinition Width="25*"/>
+                <ColumnDefinition Width="33*"/>
+            </Grid.ColumnDefinitions>
+            <Label Content="Alpha" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="131" Margin="0,5,0,0" />
+            <Label Content="Beta" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="131" Margin="0,150,0,0" />
+            <Label Content="Gamma" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="131" Margin="0,305,0,0" RenderTransformOrigin="0.475,2.006" />
+            <!--<Canvas HorizontalAlignment="Left" Height="112" Margin="10,33,0,0" VerticalAlignment="Top" Width="251" Grid.ColumnSpan="6">
+                <d3:Chart BottomTitle="Argument" LeftTitle ="Function">
+                    <d3:LineGraph x:Name ="linegraph_alpha" Description="Simple linegraph" Stroke="Blue" StrokeThickness="3"/>
+                </d3:Chart>
+            </Canvas>
+
+            <Canvas HorizontalAlignment="Left" Height="112" Margin="10,178,0,0" VerticalAlignment="Top" Width="251" Grid.ColumnSpan="6">
+                <d3:Chart BottomTitle="Argument" LeftTitle ="Function">
+                    <d3:LineGraph x:Name ="linegraph_beta" Description="Simple linegraph" Stroke="Blue" StrokeThickness="3"/>
+                </d3:Chart>
+            </Canvas>
+            <Canvas HorizontalAlignment="Left" Height="114" Margin="10,333,0,0" VerticalAlignment="Top" Width="251" Grid.ColumnSpan="6">
+                <d3:Chart BottomTitle="Argument" LeftTitle ="Function">
+                    <d3:LineGraph x:Name ="linegraph_gamma" Description="Simple linegraph" Stroke="Blue" StrokeThickness="3"/>
+                </d3:Chart>
+            </Canvas>-->
+            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="125" Margin="10,25,0,0" VerticalAlignment="Top" Width="250" Grid.ColumnSpan="6"/>
+            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="125" Margin="10,170,0,0" VerticalAlignment="Top" Width="250" Grid.ColumnSpan="6"/>
+            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="125" Margin="11,328,0,0" VerticalAlignment="Top" Width="250" Grid.ColumnSpan="6"/>
+            <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Left" Height="457" VerticalAlignment="Top" Width="270" Grid.ColumnSpan="6"/>
+        </Grid>
+
     </Grid>
+
+
 </Window>
