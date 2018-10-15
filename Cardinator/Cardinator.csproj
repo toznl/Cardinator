@@ -191,6 +191,7 @@
     <Compile Include="RunServer.xaml.cs">
       <DependentUpon>RunServer.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Run\Calibration.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

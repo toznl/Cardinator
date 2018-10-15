@@ -699,6 +699,18 @@ namespace Coordinator
             return result;
         }
 
+        public float[] Gradient_Scale(CoOrd co1, CoOrd co2, float[] scaleVector)
+        {
+            float[] result;
+            result = new float[3];
+
+            result[0] = -((co1.x - co2.x) * (scaleVector[0] * co1.x - scaleVector[0] * co2.x));
+            result[1] = -((co1.y - co2.y) * (scaleVector[1] * co1.y - scaleVector[1] * co2.y));
+            result[2] = -((co1.x - co2.z) * (scaleVector[2] * co1.z - scaleVector[2] * co2.z));
+
+            return result;
+        }
+
         public float[] scale_vector_update(CoOrd head, CoOrd neck, CoOrd shoulder_left, CoOrd elbow_left, CoOrd wrist_left, CoOrd shoulder_right, CoOrd elbow_right, CoOrd wrist_right, CoOrd spine_mid, CoOrd spine_base, float[] scale_Vector)
         {
             float[] result = new float[3];
@@ -715,33 +727,43 @@ namespace Coordinator
 
             float error_Sum = 1;
 
-            float errorAlpha = 0.1f;
-            float errorBeta = 0.1f;
-            float errorGamma = 0.1f;
-
-
             float eta = 0.1f;
             float error_Sum_Temp;
 
-
-
             while ( error_Sum > 0.1)
             {
-                error0 = wrist_elbow - distance((scale_skeleton(wrist_left, result)), (scale_skeleton(elbow_left, result)));
-                error1 = elbow_shoulder - distance(scale_skeleton(elbow_left, result), scale_skeleton(shoulder_left, result));
-                error2 = shoulder - distance(scale_skeleton(shoulder_right, result), scale_skeleton(shoulder_left, result));
-                error3 = head_neck - distance(scale_skeleton(head, result), scale_skeleton(neck, result));
-                error4 = neck_spine - distance(scale_skeleton(neck, result), scale_skeleton(spine_mid, result));
+                error0 = Math.Abs(wrist_elbow - distance(scale_skeleton(wrist_left, result), scale_skeleton(elbow_left, result)));
+                error1 = Math.Abs(elbow_shoulder - distance(scale_skeleton(elbow_left, result), scale_skeleton(shoulder_left, result)));
+                error2 = Math.Abs(shoulder - distance(scale_skeleton(shoulder_right, result), scale_skeleton(shoulder_left, result)));
+                error3 = Math.Abs(head_neck - distance(scale_skeleton(head, result), scale_skeleton(neck, result)));
+                error4 = Math.Abs(neck_spine - distance(scale_skeleton(neck, result), scale_skeleton(spine_mid, result)));
+
+                result[0] = result[0] - eta * Gradient_Scale(wrist_left, elbow_left, result)[0];
+                result[1] = result[1] - eta * Gradient_Scale(wrist_left, elbow_left, result)[1];
+                result[2] = result[2] - eta * Gradient_Scale(wrist_left, elbow_left, result)[2];
+
+                result[0] = result[0] - eta * Gradient_Scale(elbow_left, shoulder_left, result)[0];
+                result[1] = result[1] - eta * Gradient_Scale(elbow_left, shoulder_left, result)[1];
+                result[2] = result[2] - eta * Gradient_Scale(elbow_left, shoulder_left, result)[2];
+
+                result[0] = result[0] - eta * Gradient_Scale(shoulder_right, shoulder_left, result)[0];
+                result[1] = result[1] - eta * Gradient_Scale(shoulder_right, shoulder_left, result)[1];
+                result[2] = result[2] - eta * Gradient_Scale(shoulder_right, shoulder_left, result)[2];
+
+
+                result[0] = result[0] - eta * Gradient_Scale(head, neck, result)[0];
+                result[1] = result[1] - eta * Gradient_Scale(head, neck, result)[1];
+                result[2] = result[2] - eta * Gradient_Scale(head, neck, result)[2];
+
+
+                result[0] = result[0] - eta * Gradient_Scale(neck, spine_mid, result)[0];
+                result[1] = result[1] - eta * Gradient_Scale(neck, spine_mid, result)[1];
+                result[2] = result[2] - eta * Gradient_Scale(neck, spine_mid, result)[2];
 
                 error_Sum = error0 + error1 + error2 + error3 + error4; // Error_Sum
                 error_Sum_Temp = error_Sum;
-                Console.WriteLine(scale_skeleton(wrist_left, scale_Vector).x);
-                //Console.WriteLine(error0);
 
-
-                result[0] = result[0] - eta * errorAlpha;
-                result[1] = result[1] - eta * errorBeta;
-                result[2] = result[2] - eta * errorGamma;
+                Console.WriteLine("Error Before : {0}", error_Sum);
 
                 error0 = Math.Abs(wrist_elbow - distance(scale_skeleton(wrist_left, result), scale_skeleton(elbow_left, result)));
                 error1 = Math.Abs(elbow_shoulder - distance(scale_skeleton(elbow_left, result), scale_skeleton(shoulder_left, result)));
@@ -751,7 +773,7 @@ namespace Coordinator
 
                 error_Sum = error0 + error1 + error2 + error3 + error4;
 
-
+                Console.WriteLine("Error Before : {0}", error_Sum);
             }
 
             return result;
@@ -974,6 +996,11 @@ namespace Coordinator
                                 break;
                         }
                     }
+
+                    Console.WriteLine(headPC1.z);
+                    Console.WriteLine(headPC2.z);
+
+
                     #endregion
                     #region Kalman
                     //Kalman headPC1
@@ -1544,6 +1571,8 @@ namespace Coordinator
                     wristRightPC2.x = estimatedwristRightPC2Point.x;
                     wristRightPC2.y = estimatedwristRightPC2Point.y;
                     wristRightPC2.z = estimatedwristRightPC2Point.z;
+
+                    
                     #endregion
                     //Progressing
                     #region Scailing
@@ -1620,6 +1649,11 @@ namespace Coordinator
                     Console.WriteLine("thetaX = {0}, thetaY = {1}, thetaZ = {2}", calVar.thetaX, calVar.thetaY, calVar.thetaZ);
                     #endregion
 
+                    Console.WriteLine("headcar = {0}" ,headCar.z);
+                    string savePath = @"c:\test\test.txt";
+                    string textValue;
+                    textValue = System.String.Format("{0}, {1}, {2}, {3}, {4}, {5} \r\n", shoulderLeftCar.x, shoulderLeftCar.y, shoulderLeftCar.z, shoulderRightCar.x, shoulderRightCar.y, shoulderRightCar.z);
+                    
 
                     #region DrawSkeleton <Calibration>
                     //DrawSkeleton of Calibration
