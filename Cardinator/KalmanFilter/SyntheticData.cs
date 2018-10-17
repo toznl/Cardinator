@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 
 
 
-namespace Coordinator
+namespace KalmanFilter.SyntheticData
 {
     // unscented kalman filter ported from Yi Cao matlab implementation. same outputs as MyKalman class from emgu
     public class SyntheticData

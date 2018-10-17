@@ -185,9 +185,9 @@
     </ApplicationDefinition>
     <Compile Include="CoOrdStructure.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Kalman\Kalman4Joint.cs" />
-    <Compile Include="Kalman\SyntheticData.cs" />
-    <Compile Include="Kalman\Random.cs" />
+    <Compile Include="KalmanFilter\Kalman4Joint.cs" />
+    <Compile Include="KalmanFilter\SyntheticData.cs" />
+    <Compile Include="KalmanFilter\Random.cs" />
     <Compile Include="Old_Version\OldErrorFunc.cs" />
     <Compile Include="Run\Calibration.cs" />
     <Page Include="MainWindow.xaml">
