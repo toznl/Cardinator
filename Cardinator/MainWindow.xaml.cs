@@ -21,7 +21,6 @@ using Emgu.CV;
 using Emgu.CV.Structure;
 using Emgu.CV.UI;
 
-
 using System.Net;
 using System.Net.Sockets;
 using System.Threading;
@@ -32,6 +31,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Windows.Threading;
+
+using CooOrdStructure;
 
 
 namespace Coordinator
@@ -309,47 +310,7 @@ namespace Coordinator
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool AllocConsole();
         #endregion
-        #region Serialize
-        public byte[] Serialize(object param)
-        {
-            byte[] encMsg = null;
-            using (MemoryStream ms = new MemoryStream())
-            {
-                IFormatter br = new BinaryFormatter();
-                br.Serialize(ms, param);
-                encMsg = ms.ToArray();
-            }
-
-            return encMsg;
-        }
-
-        public T Deserialize<T>(byte[] param)
-        {
-            using (MemoryStream ms = new MemoryStream(param))
-            {
-                IFormatter br = new BinaryFormatter();
-                br.Binder = new AllowAssemblyDeserializationBinder();
-                return (T)br.Deserialize(ms);
-            }
-        }
-
-
-        sealed class AllowAssemblyDeserializationBinder : SerializationBinder
-        {
-            public override Type BindToType(string assemblyName, string TypeName)
-            {
-                Type typeToDeserialize = null;
-                String currentAssembly = System.Reflection.Assembly.GetExecutingAssembly().FullName;
-                assemblyName = currentAssembly;
-
-                typeToDeserialize = Type.GetType(String.Format("{0}, {1}", TypeName, assemblyName));
-
-                return typeToDeserialize;
-
-            }
-        }
-
-        #endregion
+        
         #region FunctionsForCalibration
 
         //Square product
@@ -893,29 +854,9 @@ namespace Coordinator
 
 
             #endregion
-            #region Socket Listner
-            //Fundamental Variables for Socket
-            IPEndPoint ipEndPoint = new IPEndPoint(IPAddress.Any, 5000);
-            Socket sListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            sListener.Bind(ipEndPoint);
-            sListener.Listen(1024);
-            #endregion
-
-
+           
             while (true)
             {
-                #region Socket Listner & Buffer
-                //Variables for Socket and Transport Coordination
-                int x = 0;
-                Socket handler = sListener.Accept();
-                byte[] buffer = new byte[10000];
-                x = handler.Receive(buffer);
-                BinaryFormatter forDeserialize = new BinaryFormatter();
-                forDeserialize.Binder = new AllowAssemblyDeserializationBinder();
-                CoOrd buf = new CoOrd();
-                buf = Deserialize<CoOrd>(buffer);
-                #endregion
-
                 try
                 {
 

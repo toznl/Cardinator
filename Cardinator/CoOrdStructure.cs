@@ -14,19 +14,22 @@ using System.Windows.Shapes;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
-using System.Collections;
-using System.Runtime.InteropServices;
+using System.Windows.Threading;
 
+using System.Runtime.InteropServices;
+using Microsoft.Kinect;
 using System.Runtime.Serialization.Formatters;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Runtime.Serialization;
 using System.IO;
 using System.Security.Cryptography;
 
+namespace CooOrdStructure
 
-
-namespace Coordinator
 {
+    //Main structure of joints with serializable
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    [Serializable]
     //Theta and Translation Valiables for Error function and initialized
     public struct ErrorVar
     {
@@ -73,7 +76,7 @@ namespace Coordinator
     {
 
         [MarshalAs(UnmanagedType.R4)]
-        public float x; 
+        public float x;
 
         [MarshalAs(UnmanagedType.R4)]
         public float y;
@@ -100,18 +103,5 @@ namespace Coordinator
             markerPC = mPc;
 
         }
-
-
-    }
-
-    public partial class RunServer : UserControl
-    {
-        private Grid root;
-
-        public RunServer(Grid root)
-        {
-            this.root = root;
-        }
-
     }
 }
