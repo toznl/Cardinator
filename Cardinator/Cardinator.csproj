@@ -187,7 +187,6 @@
     <Compile Include="Kalman\Kalman4Joint.cs" />
     <Compile Include="Kalman\SyntheticData.cs" />
     <Compile Include="Kalman\Random.cs" />
-    <Compile Include="Old_Version\OldErrorFunc.cs" />
     <Compile Include="RunServer.xaml.cs">
       <DependentUpon>RunServer.xaml</DependentUpon>
     </Compile>
