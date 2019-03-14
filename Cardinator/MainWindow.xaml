@@ -29,7 +29,7 @@
             <Label Content="Skeleton &lt;Kinect2&gt;" HorizontalAlignment="Left" Height="28" Margin="0,259,0,0" VerticalAlignment="Top" Width="131" />
             <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="193" Margin="10,51,0,0" Stroke="Black" VerticalAlignment="Top" Width="328"/>
             <Rectangle Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="193" Margin="10,282,0,0" Stroke="Black" VerticalAlignment="Top" Width="328"/>
-            <TextBox HorizontalAlignment="Left" Height="173" Margin="17,62,0,0" VerticalAlignment="Top" Width="311" Name="kinectv1connected"/>
+            <TextBlock HorizontalAlignment="Left" Height="173" Margin="17,62,0,0" VerticalAlignment="Top" Width="311" Name="kinectv1connected"/>
         </Grid>
         <Grid HorizontalAlignment="Left" Height="457" Margin="755,21,-610,0" VerticalAlignment="Top" Width="270">
             <Grid.ColumnDefinitions>
